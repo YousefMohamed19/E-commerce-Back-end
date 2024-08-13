@@ -1,6 +1,7 @@
 import { Brand } from "../../../db/index.js"
-import { AppError, deleteFile, messages } from "../../utils/index.js"
+import { AppError, deleteFile, messages,ApiFeature } from "../../utils/index.js"
 
+// create brand
 export const createBrand = async (req, res, next) => {
     // get data from req
     let { name } = req.body;
@@ -35,7 +36,6 @@ export const createBrand = async (req, res, next) => {
 }
 
 // update brand
-
 export const updateBrand = async (req, res, next) => {
     // get data from req
     let { name } = req.body;
@@ -105,7 +105,17 @@ export const deleteBrand = async (req, res, next) => {
 
 
 
-// get brands
-export const getBrands = async (req, res, next) => {
-    
+// get all brands
+export const getAllBrands = async (req, res, next) => {
+    const apiFeatures = new ApiFeature(Brand.find(), req.query).pagination().sort().select().filter();
+    const brands = await apiFeatures.mongooseQuery;
+    if (!brands) {
+        return next(new AppError(messages.brand.notFound, 404));
+    }
+    // send response
+    res.status(200).json({
+        success: true,
+        message: messages.brand.getSuccessfully,
+        data: brands
+    });
 }

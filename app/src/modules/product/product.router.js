@@ -3,7 +3,7 @@ import { Router } from "express";
 import { createProductVal, updateProductVal } from "./product.validation.js";
 import { fileUpload , asyncHandler} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
-import { createProduct, updateProduct } from "./product.controller.js";
+import { createProduct, updateProduct,getAllProducts, deleteProduct } from "./product.controller.js";
 
 
 const productRouter = Router();
@@ -28,4 +28,10 @@ productRouter.put('/update/:productId',
     isValid(updateProductVal), 
     asyncHandler(updateProduct)
 )
+
+// get all product
+productRouter.get('/',asyncHandler(getAllProducts))
+ // delete product todo isAuthentication
+ productRouter.delete('/:productId',asyncHandler(deleteProduct))
+
 export default productRouter

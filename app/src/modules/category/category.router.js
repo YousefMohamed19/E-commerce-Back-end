@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { fileUpload ,asyncHandler} from "../../utils/index.js";
+import { fileUpload ,asyncHandler,cloudUpload} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal } from "./category.validation.js";
-import { addCategory, deletCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
+import { addCategory, CreateCategoryCloud, deletCategory, getAllCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
 
 const categoryRouter = Router()
 // for merge params
@@ -29,8 +29,19 @@ categoryRouter.get('/:categoryId',
     asyncHandler(getSpecificCategory))
 
 
+// get all category
+categoryRouter.get('/',
+    asyncHandler(getAllCategory))
+
 // delete category
 categoryRouter.delete('/delete/:categoryId',
     isValid(deleteCategoryVal),
     asyncHandler(deletCategory))
+
+// create category with cloud
+categoryRouter.post('/create-category-cloud',
+    cloudUpload().single('image'),
+    isValid(addCategoryVal),
+    asyncHandler(CreateCategoryCloud)
+)
 export default categoryRouter

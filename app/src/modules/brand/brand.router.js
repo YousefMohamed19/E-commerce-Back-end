@@ -3,7 +3,7 @@ import { Router } from "express";
 import { asyncHandler, fileUpload } from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { createBrandVal, deleteBrandVal, updateBrandVal } from "./brand.validation.js";
-import { createBrand, deleteBrand, updateBrand } from "./brand.controller.js";
+import { createBrand, deleteBrand, getAllBrands, updateBrand } from "./brand.controller.js";
 
 const brandRouter = Router();
 
@@ -26,4 +26,8 @@ brandRouter.put('/update/:brandId',
 brandRouter.delete('/delete/:brandId',
     isValid(deleteBrandVal),
     asyncHandler(deleteBrand))
+
+// get all brand
+brandRouter.get('/',asyncHandler(getAllBrands))
+
 export default brandRouter

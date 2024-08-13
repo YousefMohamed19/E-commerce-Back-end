@@ -2,7 +2,7 @@ import { Router } from "express";
 import { fileUpload ,asyncHandler} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { createSubcategoryVal, deleteSubcategoryVal, getSubcategoryVal ,updateSubcategoryVal} from "./subcategory.validation.js";
-import { createSubcategory, deleteSubcategory, getSubcategories, updateSubcategory } from "./subcategory.controller.js";
+import { createSubcategory, deleteSubcategory, getSpecificSubcategories, updateSubcategory } from "./subcategory.controller.js";
 
 const subcategoryRouter = Router(/*{mergeParams: true}*/);
 
@@ -22,7 +22,7 @@ subcategoryRouter.put('/update/:subcategoryId',
 // get subcategory
 subcategoryRouter.get('/:categoryId',
     isValid(getSubcategoryVal),
-    asyncHandler(getSubcategories))
+    asyncHandler(getSpecificSubcategories))
 
 // delete subcategory
 subcategoryRouter.delete('/delete/:subcategoryId',

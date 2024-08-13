@@ -93,7 +93,7 @@ export const updateSubcategory = async (req, res, next) => {
 
 
 // get subcategory
-export const getSubcategories = async (req, res, next) => {
+export const getSpecificSubcategories = async (req, res, next) => {
     // get data from req
     const {categoryId} = req.params
     // check existance of category

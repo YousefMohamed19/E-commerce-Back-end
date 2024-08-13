@@ -39,4 +39,5 @@ export const updateProductVal = joi.object({
     size:joi.custom(parseArr),
     colors:joi.custom(parseArr),
     stock:generalFields.stock.min(0),
+    productId:generalFields.objectId
 }).required()

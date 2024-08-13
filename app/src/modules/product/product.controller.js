@@ -1,6 +1,6 @@
 import slugify from "slugify";
 import { Brand, Category ,Product,SubCategory} from "../../../db/index.js";
-import { AppError, messages } from "../../utils/index.js";
+import { AppError, messages,ApiFeature,deleteFile } from "../../utils/index.js";
 
 // create product
 export const createProduct = async (req,res,next) => {
@@ -101,4 +101,46 @@ export const updateProduct = async (req,res,next) => {
         success:true,
         data: updatedProduct
     })
+}
+
+
+// get all products with api feature
+export const getAllProducts = async (req,res,next) => {
+    const apiFeature =new ApiFeature(Product.find(),req.query).pagination().sort().select().filter()
+    const products = await apiFeature.mongooseQuery
+    if (!products) {
+        return next(new AppError(messages.product.notFound, 404))
+    }
+    // send response
+    res.status(200).json({
+        messages: messages.product.getSuccessfully,
+        success:true,
+        data: products
+    })
+}
+
+
+//delete product with images associated
+
+export const deleteProduct = async (req,res,next)=>{
+    const {productId}= req.params
+
+    const productExist = await Product.findById(productId)
+    if(!productExist){
+        return next(new AppError(messages.product.notFound,404))
+    }
+
+//find and delete image
+    deleteFile(productExist.mainImage)
+    productExist.subImages.forEach((image)=>{
+        deleteFile(image)
+    })
+    await Product.findByIdAndDelete(productId)
+
+    return res.status(200).json({
+        message:messages.product.deleteSuccessfully,    
+        success:true
+    })
+
+
 }

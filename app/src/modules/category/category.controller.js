@@ -1,6 +1,9 @@
 import slugify from "slugify"
 import { Category, Product, SubCategory } from "../../../db/index.js"
-import { AppError ,messages, deleteFile} from "../../utils/index.js"
+import { AppError ,messages, deleteFile,ApiFeature} from "../../utils/index.js"
+import cloudinary from "../../utils/cloudinary.js"
+
+
 
 
 // add category
@@ -121,7 +124,20 @@ export const getSpecificCategory = async (req, res,next) => {
     //       }
     //   ])
 }
-
+// get all category with api feature
+export const getAllCategory = async (req, res,next) => {
+    const apiFeature = new ApiFeature(Category.find(), req.query).pagination().sort().select().filter()
+    const categories = await apiFeature.mongooseQuery
+    if (!categories) {
+        return next(new AppError(messages.category.notFound, 404))
+    }
+    // send response
+    return res.status(200).json({
+        message: messages.category.getSuccessfully,
+        success:true,
+        data: categories
+    })
+}
 
 // delete category
 
@@ -169,4 +185,46 @@ export const deletCategory = async (req, res, next) => {
     deleteFile(categoryExist.image.path)
 
     return res.status(200).json({ message: messages.category.deleteSuccessfully, success: true })
+}
+
+
+
+//-----------------cloud---------------//
+// create category with cloud
+export const CreateCategoryCloud = async (req, res, next) => {
+    //get data from request
+    const { name } = req.body
+    //check file
+    if (!req.file) {
+        return new AppError(messages.file.required, 400)
+    }
+    //check existance
+    const categoryExist = await Category.findOne({ name: name.toLowerCase() })
+    if (categoryExist) {
+        return next(new AppError(messages.category.alreadyExist, 409))
+    }
+    //prepare data
+    const slug = slugify(name)
+    const {secure_url,public_id}= await cloudinary.uploader.upload(req.file.path,
+        {
+            folder: 'e-comerce/category'
+            // public_id:category.image.public_id
+        })
+    const category = new Category({
+        name,
+        slug,
+        image: {secure_url,public_id}
+    })
+    //add to database
+    const createdCategory = await category.save()
+    if (!createdCategory) {
+
+        return next(new AppError(messages.category.failToCreate, 500))
+    }
+    //send res
+    return res.status(201).json({
+        message: messages.category.createSuccessfully,
+        success: true,
+        data: createdCategory
+    })
 }
