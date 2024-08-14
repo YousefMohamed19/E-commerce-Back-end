@@ -2,11 +2,12 @@ import { Router } from "express";
 import { fileUpload ,asyncHandler,cloudUpload} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal } from "./category.validation.js";
-import { addCategory, CreateCategoryCloud, deletCategory, getAllCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
+import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
 
 const categoryRouter = Router()
 // for merge params
 // categoryRouter.use('/:categoryId', subcategoryRouter)
+
 
 
 //add category todo authentication & auth
@@ -16,6 +17,7 @@ categoryRouter.post('/create',
     asyncHandler(addCategory)
 )
 
+
 // upadate category todo authentication & auth
 categoryRouter.put('/update/:categoryId',
     fileUpload({folder:'category'}).single('image'),
@@ -23,20 +25,26 @@ categoryRouter.put('/update/:categoryId',
     asyncHandler(updateCategory)
 )
 
+
 // get category
 categoryRouter.get('/:categoryId',
     isValid(getCategoryVal), 
-    asyncHandler(getSpecificCategory))
+    asyncHandler(getSpecificCategory)
+)
 
 
 // get all category
 categoryRouter.get('/',
-    asyncHandler(getAllCategory))
+    asyncHandler(getAllCategory)
+)
+
 
 // delete category
 categoryRouter.delete('/delete/:categoryId',
     isValid(deleteCategoryVal),
-    asyncHandler(deletCategory))
+    asyncHandler(deletCategory)
+)
+
 
 // create category with cloud
 categoryRouter.post('/create-category-cloud',
@@ -44,4 +52,17 @@ categoryRouter.post('/create-category-cloud',
     isValid(addCategoryVal),
     asyncHandler(CreateCategoryCloud)
 )
+
+
+// delete category with cloud
+categoryRouter.delete('/delete-category-cloud',
+    asyncHandler(deleteCategoryCloud)
+)
+
+
+// update category with cloud
+categoryRouter.put('/update-category-cloud/:categoryId',
+    cloudUpload().single('image'),
+    isValid(updateCategoryVal),
+    asyncHandler(CreateCategoryCloud))
 export default categoryRouter

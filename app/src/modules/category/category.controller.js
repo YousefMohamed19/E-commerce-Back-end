@@ -4,8 +4,6 @@ import { AppError ,messages, deleteFile,ApiFeature} from "../../utils/index.js"
 import cloudinary from "../../utils/cloudinary.js"
 
 
-
-
 // add category
 export const addCategory = async (req, res,next) => {
 
@@ -42,6 +40,8 @@ export const addCategory = async (req, res,next) => {
         success:true,
         data:createdCategory})
 }
+
+
 
 
 // update category
@@ -85,6 +85,9 @@ export const updateCategory =async (req, res,next) => {
     })
 }
 
+
+
+
 // get category
 export const getSpecificCategory = async (req, res,next) => {
     // get data from req
@@ -124,6 +127,9 @@ export const getSpecificCategory = async (req, res,next) => {
     //       }
     //   ])
 }
+
+
+
 // get all category with api feature
 export const getAllCategory = async (req, res,next) => {
     const apiFeature = new ApiFeature(Category.find(), req.query).pagination().sort().select().filter()
@@ -139,8 +145,9 @@ export const getAllCategory = async (req, res,next) => {
     })
 }
 
-// delete category
 
+
+// delete category
 export const deletCategory = async (req, res, next) => {
     // get data from req
     const { categoryId } = req.params
@@ -189,6 +196,9 @@ export const deletCategory = async (req, res, next) => {
 
 
 
+
+
+
 //-----------------cloud---------------//
 // create category with cloud
 export const CreateCategoryCloud = async (req, res, next) => {
@@ -227,4 +237,71 @@ export const CreateCategoryCloud = async (req, res, next) => {
         success: true,
         data: createdCategory
     })
+}
+
+
+
+// delete category with cloud
+export const deleteCategoryCloud = async (req, res, next) => async (req, res, next) => {
+    // get data from req
+    const { categoryId } = req.query
+    // check existence
+    const categoryExist = await Category.findByIdAndDelete(categoryId)// {}, null
+    if (!categoryExist) {
+        return next(new AppError(messages.category.notFound, 404))
+    }
+    // prepare ids
+    const subcategories = await SubCategory.find({ category: categoryId }).select('image')
+    const products = await Product.find({ category: categoryId }).select('mainImage subImages')
+    const imagePaths = []
+
+
+    const subcategoryIds = []
+    subcategories.forEach(sub => {
+        imagePaths.push(sub.image)
+        subcategoryIds.push(sub._id)
+    })//[1,2,3,4]
+    const productIds = []
+    products.forEach(prod => {
+        imagePaths.push(prod.mainImage);
+        imagePaths.push(...prod.subImages)
+        productIds.push(prod._id);
+    })//[1,2,3]
+    // delete subcategories
+    await SubCategory.deleteMany({ _id: { $in: subcategoryIds } })
+    await Product.deleteMany({ _id: { $in: productIds } })
+    // delete images
+    // const imagePaths = subcategories.map(sub => sub.image)//['']
+    // for (let i = 0; i < products.length; i++) {
+    //     imagePaths.push(products[i].mainImage)
+    //     imagePaths.push(...products[i].subImages)
+    // }
+    for (let i = 0; i < imagePaths.length; i++) {
+        if (typeof (imagePaths[i]) === "string") {
+            deleteFile(imagePaths[i])
+        }
+        else {
+            await cloudinary.uploader.destroy(imagePaths[i].public_id)
+        }
+    }
+    // another sol >>> delete folder
+    await cloudinary.api.delete_resources_by_prefix(`e-comerce/category/${categoryId}`)
+    await cloudinary.api.delete_folder(`e-comerce/category/${categoryId}`)
+}
+
+
+
+// update category with cloud
+export const updateCategoryCloud = async (req, res, next) => {
+    const { categoryId } = req.params
+    const category = await Category.findById(categoryId)
+    if (req.file) {
+        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { public_id: category.image.public_id })
+        req.body.image = { secure_url, public_id }
+    }
+
+    category.name = req.body.name || category.name
+    category.image = req.body.image || category.image// {secure_}
+    await category.save()
+    return res.json('done')
 }
