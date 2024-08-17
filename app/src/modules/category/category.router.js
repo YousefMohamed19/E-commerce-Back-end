@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { fileUpload ,asyncHandler,cloudUpload} from "../../utils/index.js";
+import { fileUpload ,asyncHandler,cloudUpload, roles} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal } from "./category.validation.js";
 import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
+import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 
 const categoryRouter = Router()
 // for merge params
@@ -10,16 +11,20 @@ const categoryRouter = Router()
 
 
 
-//add category todo authentication & auth
+//add category 
 categoryRouter.post('/create',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     fileUpload({folder:'category'}).single('image'),
     isValid(addCategoryVal),
     asyncHandler(addCategory)
 )
 
 
-// upadate category todo authentication & auth
+// upadate category 
 categoryRouter.put('/update/:categoryId',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     fileUpload({folder:'category'}).single('image'),
     isValid(updateCategoryVal),
     asyncHandler(updateCategory)
@@ -41,6 +46,8 @@ categoryRouter.get('/',
 
 // delete category
 categoryRouter.delete('/delete/:categoryId',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     isValid(deleteCategoryVal),
     asyncHandler(deletCategory)
 )
@@ -48,6 +55,8 @@ categoryRouter.delete('/delete/:categoryId',
 
 // create category with cloud
 categoryRouter.post('/create-category-cloud',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     cloudUpload().single('image'),
     isValid(addCategoryVal),
     asyncHandler(CreateCategoryCloud)
@@ -56,12 +65,16 @@ categoryRouter.post('/create-category-cloud',
 
 // delete category with cloud
 categoryRouter.delete('/delete-category-cloud',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     asyncHandler(deleteCategoryCloud)
 )
 
 
 // update category with cloud
 categoryRouter.put('/update-category-cloud/:categoryId',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     cloudUpload().single('image'),
     isValid(updateCategoryVal),
     asyncHandler(CreateCategoryCloud))

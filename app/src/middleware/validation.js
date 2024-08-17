@@ -19,6 +19,10 @@ export const generalFields = {
     size: joi.array(),  
     colors: joi.array(),
     stock: joi.number(),
+    phone: joi.string(),
+    email: joi.string(),
+    password: joi.string(),
+    role: joi.string(),
     // objectId:joi.string().hex().length(24)
     objectId:joi.custom(validateObjectId)
 }

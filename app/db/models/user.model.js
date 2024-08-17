@@ -1,7 +1,7 @@
 import path from 'path'
 import dotenv from 'dotenv'
 import { model, Schema } from "mongoose";
-import { roles, status } from '../../src/utils/index.js';
+import {  roles, status } from '../../src/utils/index.js';
 dotenv.config({ path: path.resolve('./config/.env') })
 // schema
 const userSchema = new Schema(
@@ -56,8 +56,8 @@ const userSchema = new Schema(
             ref: "Product"
         }
         ],
-        otp: Number,
-        expireDateOtp: Date
+        // otp: Number,
+        // expireDateOtp: Date
     }, {
     timestamps: true,
     toJSON: { virtuals: true },
@@ -65,10 +65,13 @@ const userSchema = new Schema(
 }
 )
 // hooks
-// userSchema.pre('save', function () {
-//     console.log(this);
-//     this.password = hashPassword({ password: this.password })
-// })
+// userSchema.pre('save', async function (next) {
+//     if (this.isModified('password')) {
+//         this.password = hashPassword({ password: this.password });
+//     }
+//     next();
+// });
+
 
 // model
 export const User = model('User', userSchema)

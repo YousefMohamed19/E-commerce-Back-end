@@ -39,12 +39,12 @@ const productSchema = new Schema({
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: false //todo true
+        required: true 
     },
     updatedBY: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: false //todo true
+        required: true 
     },
     //=================images====================//
     mainImage: {
