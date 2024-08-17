@@ -1,6 +1,6 @@
 import { User } from "../../../db/index.js"
 import cloudinary from "../../utils/cloudinary.js"
-import { AppError, hashPassword, messages, status } from "../../utils/index.js"
+import { ApiFeature, AppError, hashPassword, messages, status } from "../../utils/index.js"
 
 export const addUser = async (req, res, next) => {
     // get data from req
@@ -12,7 +12,7 @@ export const addUser = async (req, res, next) => {
     }
     // prepare data
     if(req.file) {
-    const {secure_url, public_id} = await cloudinary.uploader.upload(req.file.path, {folder: 'users'})
+    const {secure_url, public_id} = await cloudinary.uploader.upload(req.file.path, {folder: 'e-comerce/users'})
     req.body.image = {secure_url, public_id}
     }
     const hashedPassword = hashPassword({ password: 'e-commerce' })
@@ -34,5 +34,61 @@ export const addUser = async (req, res, next) => {
         success: true,
         message: messages.user.createSuccessfully,
         data: createdUser
+    })
+}
+
+
+
+// get users
+export const getUsers = async (req, res, next) => {
+    const apiFeatures = new ApiFeature(User.find(), req.query).pagination().sort().select().filter();
+    const users = await apiFeatures.mongooseQuery;
+    if (!users) {
+        return next(new AppError(messages.user.notFound, 404))
+    }
+    // send response
+    res.status(200).json({
+        success: true,
+        message: messages.user.getSuccessfully,
+        data: users
+    })
+}
+
+
+// delete user
+export const deleteUser = async (req, res, next) => {
+    // get data from req
+    const { userId } = req.params
+    const user = await User.findByIdAndDelete(userId)
+    if (!user) {
+        return next(new AppError(messages.user.notFound, 404))
+    }
+    // delete image from cloudinary
+    if(user.image) {
+        await cloudinary.uploader.destroy(user.image.public_id)
+    }
+    // send response
+    res.status(200).json({
+        success: true,
+        message: messages.user.deleteSuccessfully,
+        data: user
+    })
+}
+
+
+// update user
+export const updateUser = async (req, res, next) => {
+    // get data from req
+    const {userId} = req.params
+    const {role} = req.body
+    const user = await User.findByIdAndUpdate(userId, {role}, {new: true})
+    if (!user) {
+        return next(new AppError(messages.user.notFound, 404))
+    }
+    // send response
+    res.status(200).json({
+        success: true,
+        message: messages.user.updateSuccessfully,
+        data: user
     })
 }
