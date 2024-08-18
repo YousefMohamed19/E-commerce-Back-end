@@ -19,10 +19,16 @@ export const messages = {
         verifySuccessfully: 'Your account verifed successfully',
         invalidCredentials:'Invalid credentials',
         loginSuccessfully: 'Login successfully',
-        notVerified: 'Your account is not verified'},
+        notVerified: 'Your account is not verified',
+        cannotDeleteAdmin: 'You cannot delete an admin',},
     auth: {...generateMessage('auth'), required: 'token is required',
         notAuthorized: 'You are not authorized'},
     wishlist : {...generateMessage('wishlist'),
-        addToWishlist: 'Added to wishlist successfully'},
+        addToWishlist: 'Added to wishlist successfully',
+        notFoundWishlist: 'Your wishlist is empty'},
+    review : {...generateMessage('review'),notFoundReview:'This product has no review'},
+    coupon : {...generateMessage('coupon'),invalidAmount:'Must be less than 100'},
+    cart : {...generateMessage('cart'),
+        notFoundCart: 'Your cart is empty'}
         
 }

@@ -23,6 +23,7 @@ export const generalFields = {
     email: joi.string(),
     password: joi.string(),
     role: joi.string(),
+    comment: joi.string(),
     // objectId:joi.string().hex().length(24)
     objectId:joi.custom(validateObjectId)
 }

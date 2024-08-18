@@ -19,6 +19,9 @@ export const initApp = (app, express) => {
     app.use('/auth', allRouters.authRouter)
     app.use('/admin', allRouters.adminRouter)
     app.use('/wishlist', allRouters.wishlistRouter)
+    app.use('/review', allRouters.reviewRouter)
+    app.use('/coupon', allRouters.couponRouter)
+    app.use('/cart', allRouters.cartRouter)
     // global error handling
     app.use(globalErrorHandling)
     // start server

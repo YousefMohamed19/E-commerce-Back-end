@@ -1,4 +1,4 @@
-import { User } from "../../../db/index.js"
+import { Cart, User } from "../../../db/index.js"
 import cloudinary from "../../utils/cloudinary.js"
 import { ApiFeature, AppError, hashPassword, messages, status } from "../../utils/index.js"
 
@@ -28,7 +28,8 @@ export const addUser = async (req, res, next) => {
     if (!createdUser) {
         return next(new AppError(messages.user.failToCreate, 500))
     }
-    
+     // create cart for the user
+     await Cart.create({ user: createdUser._id, products: [] });
     // send response
     res.status(201).json({
         success: true,
@@ -57,23 +58,36 @@ export const getUsers = async (req, res, next) => {
 
 // delete user
 export const deleteUser = async (req, res, next) => {
-    // get data from req
-    const { userId } = req.params
-    const user = await User.findByIdAndDelete(userId)
-    if (!user) {
-        return next(new AppError(messages.user.notFound, 404))
-    }
-    // delete image from cloudinary
-    if(user.image) {
-        await cloudinary.uploader.destroy(user.image.public_id)
-    }
-    // send response
-    res.status(200).json({
-        success: true,
-        message: messages.user.deleteSuccessfully,
-        data: user
-    })
-}
+        // get data from req
+        const { userId } = req.params;
+
+        // find the user to be deleted
+        const user = await User.findById(userId);
+        if (!user) {
+            return next(new AppError(messages.user.notFound, 404));
+        }
+
+        // check if the requesting user is an admin and if they are trying to delete another admin
+        if (req.authUser.role === 'admin' && user.role === 'admin') {
+            return next(new AppError(messages.user.cannotDeleteAdmin, 403)); 
+        }
+
+        // delete the user
+        await User.findByIdAndDelete(userId);
+
+        // delete image from cloudinary if it exists
+        if (user.image) {
+            await cloudinary.uploader.destroy(user.image.public_id);
+        }
+
+        // send response
+        res.status(200).json({
+            success: true,
+            message: messages.user.deleteSuccessfully,
+            data: user
+        });
+    
+};
 
 
 // update user

@@ -1,5 +1,5 @@
 import { Product, User } from "../../../db/index.js"
-import { AppError, messages } from "../../utils/index.js"
+import { ApiFeature, AppError, messages } from "../../utils/index.js"
 // add to wishlist
 export const addToWishlist = async (req, res, next) => {
     // get data from req
@@ -37,3 +37,32 @@ export const deleteFromWishlist = async (req, res, next) => {
         data: user
     })
 }
+
+
+// get wishlist
+export const getWishlist = async (req, res, next) => {
+    // Fetch the user and their wishlist
+    const apiFeatures = new ApiFeature(User.findById(req.authUser._id).populate('wishlist'), req.query).pagination().sort();
+    const user = await apiFeatures.mongooseQuery;
+
+    // Check if user exists
+    if (!user) {
+        return next(new AppError(messages.user.notFound, 404));
+    }
+
+    // Ensure the authenticated user is the owner of the account
+    if (String(user._id) !== String(req.authUser._id)) {
+        return next(new AppError(messages.auth.notAuthorized, 403)); 
+    }
+
+    // Check if the user has a wishlist
+    if (!user.wishlist || user.wishlist.length === 0) {
+        return next(new AppError(messages.wishlist.notFoundWishlist, 404));
+    }
+
+    // Send the response with the user's wishlist
+    return res.status(200).json({
+        success: true,
+        data: user.wishlist
+    });
+};

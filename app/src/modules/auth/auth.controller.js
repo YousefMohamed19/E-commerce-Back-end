@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { User } from "../../../db/index.js"
+import { Cart, User } from "../../../db/index.js"
 import { AppError, messages , sendEmail, generateToken, verifyToken, status, comparePassword, hashPassword} from "../../utils/index.js"
 
 export const signUp = async(req, res, next) => {
@@ -47,6 +47,8 @@ export const verifyAccount = async(req, res, next) => {
     const decoded = verifyToken({token})
     const user =await User.findByIdAndUpdate(decoded._id, { status:status.VERIFIED }, { new: true })
     if(!user) return next(new AppError(messages.user.notFound, 404))
+     await Cart.create({ user: user._id, products: [] })
+    // send response
     return res.status(200).json({
         message: messages.user.verifySuccessfully,
         success:true

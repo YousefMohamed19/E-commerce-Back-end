@@ -5,4 +5,18 @@ import brandRouter from "./modules/brand/brand.router.js";
 import authRouter from "./modules/auth/auth.router.js";
 import adminRouter from "./modules/admin/admin.router.js";
 import wishlistRouter from "./modules/wishlist/wishlist.router.js";
-export { categoryRouter, subcategoryRouter, productRouter, brandRouter, authRouter, adminRouter,wishlistRouter }
+import reviewRouter from "./modules/review/review.router.js";
+import couponRouter from "./modules/coupon/coupon.router.js";
+import cartRouter from "./modules/cart/cart.router.js";
+export { 
+    categoryRouter,
+    subcategoryRouter, 
+    productRouter, 
+    brandRouter, 
+    authRouter, 
+    adminRouter, 
+    wishlistRouter, 
+    reviewRouter, 
+    couponRouter, 
+    cartRouter
+}
