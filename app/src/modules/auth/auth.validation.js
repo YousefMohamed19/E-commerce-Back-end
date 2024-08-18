@@ -19,3 +19,15 @@ export const signInVal = joi.object({
         otherwise: joi.required()
     }),
 }).required()
+
+// forget password
+export const forgetPasswordVal = joi.object({
+    email: generalFields.email.required()
+}).required()
+
+// change password
+export const changPasswordVal = joi.object({
+    otp: generalFields.otp.required(),
+    newPassword: generalFields.password.required(),
+    email: generalFields.email.required()
+}).required()

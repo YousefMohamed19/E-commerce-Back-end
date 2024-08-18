@@ -24,6 +24,7 @@ export const generalFields = {
     password: joi.string(),
     role: joi.string(),
     comment: joi.string(),
+    otp: joi.string(),
     // objectId:joi.string().hex().length(24)
     objectId:joi.custom(validateObjectId)
 }

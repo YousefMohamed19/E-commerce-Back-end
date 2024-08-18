@@ -56,8 +56,8 @@ const userSchema = new Schema(
             ref: "Product"
         }
         ],
-        // otp: Number,
-        // expireDateOtp: Date
+        otp: Number,
+        expireDateOtp: Date
     }, {
     timestamps: true,
     toJSON: { virtuals: true },

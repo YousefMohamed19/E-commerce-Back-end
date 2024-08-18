@@ -36,3 +36,29 @@ export const isAuthorized =(roles=[])=>{
         next()
     }
 }
+
+
+// export const isAuthenticated = () => {
+//     return async (req, res, next) => {
+//         const {authorization} = req.headers
+//     const {bearer, token} = authorization.split(' ')
+//     // check token verify
+//     let result = ''
+//     if(bearer == 'access-token'){
+//         result = verifyToken({token , secretKey:process.env.secretKeyAccessToken})
+//     }
+//     else if(bearer == 'reset-password'){
+//         result = verifyToken({token , secretKey:process.env.secretKeyResetPassword})
+//     }
+//     if(result.message){
+//         return next(new AppError(result.message))
+//     }
+//     //check user
+//     const user = await User.findOne({_id:result._id , status:status.VERIFIED}).select('-password')
+//     if(!user){
+//         return next(new AppError(messages.user.notFound, 401))
+//     }
+//     req.authUser = user
+//     next()
+//     }
+// }

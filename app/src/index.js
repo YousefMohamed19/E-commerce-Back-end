@@ -8,6 +8,7 @@ import wishlistRouter from "./modules/wishlist/wishlist.router.js";
 import reviewRouter from "./modules/review/review.router.js";
 import couponRouter from "./modules/coupon/coupon.router.js";
 import cartRouter from "./modules/cart/cart.router.js";
+import userRouter from "./modules/user/user.router.js";
 export { 
     categoryRouter,
     subcategoryRouter, 
@@ -18,5 +19,6 @@ export {
     wishlistRouter, 
     reviewRouter, 
     couponRouter, 
-    cartRouter
+    cartRouter,
+    userRouter
 }
