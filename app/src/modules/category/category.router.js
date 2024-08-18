@@ -4,7 +4,7 @@ import { isValid } from "../../middleware/validation.js";
 import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal } from "./category.validation.js";
 import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-
+import { isActive } from "../../middleware/isActive.js";
 const categoryRouter = Router()
 // for merge params
 // categoryRouter.use('/:categoryId', subcategoryRouter)
@@ -17,6 +17,7 @@ categoryRouter.post('/create',
     isAuthorized([roles.ADMIN, roles.SELLER]),
     fileUpload({folder:'category'}).single('image'),
     isValid(addCategoryVal),
+    isActive(),
     asyncHandler(addCategory)
 )
 
@@ -27,13 +28,14 @@ categoryRouter.put('/update/:categoryId',
     isAuthorized([roles.ADMIN, roles.SELLER]),
     fileUpload({folder:'category'}).single('image'),
     isValid(updateCategoryVal),
+    isActive(),
     asyncHandler(updateCategory)
 )
 
 
 // get category
 categoryRouter.get('/:categoryId',
-    isValid(getCategoryVal), 
+    isValid(getCategoryVal),
     asyncHandler(getSpecificCategory)
 )
 
@@ -49,6 +51,7 @@ categoryRouter.delete('/delete/:categoryId',
     asyncHandler(isAuthenticate()),
     isAuthorized([roles.ADMIN, roles.SELLER]),
     isValid(deleteCategoryVal),
+    isActive(),
     asyncHandler(deletCategory)
 )
 
@@ -59,6 +62,7 @@ categoryRouter.post('/create-category-cloud',
     isAuthorized([roles.ADMIN, roles.SELLER]),
     cloudUpload().single('image'),
     isValid(addCategoryVal),
+    isActive(),
     asyncHandler(CreateCategoryCloud)
 )
 
@@ -67,6 +71,7 @@ categoryRouter.post('/create-category-cloud',
 categoryRouter.delete('/delete-category-cloud',
     asyncHandler(isAuthenticate()),
     isAuthorized([roles.ADMIN, roles.SELLER]),
+    isActive(),
     asyncHandler(deleteCategoryCloud)
 )
 
@@ -77,5 +82,6 @@ categoryRouter.put('/update-category-cloud/:categoryId',
     isAuthorized([roles.ADMIN, roles.SELLER]),
     cloudUpload().single('image'),
     isValid(updateCategoryVal),
+    isActive(),
     asyncHandler(CreateCategoryCloud))
 export default categoryRouter

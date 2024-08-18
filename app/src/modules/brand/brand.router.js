@@ -5,7 +5,7 @@ import { isValid } from "../../middleware/validation.js";
 import { createBrandVal, deleteBrandVal, updateBrandVal } from "./brand.validation.js";
 import { createBrand, deleteBrand, getAllBrands, updateBrand } from "./brand.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-
+import { isActive } from "../../middleware/isActive.js";
 const brandRouter = Router();
 
 // create brand  
@@ -14,6 +14,7 @@ brandRouter.post('/create',
     isAuthorized([roles.ADMIN, roles.SELLER]),
     fileUpload({folder: "brand"}).single('logo'),
     isValid(createBrandVal), 
+    isActive(),
     asyncHandler(createBrand)
 )
 
@@ -24,6 +25,7 @@ brandRouter.put('/update/:brandId',
     isAuthorized([roles.ADMIN, roles.SELLER]),
     fileUpload({folder: "brand"}).single('logo'),
     isValid(updateBrandVal), 
+    isActive(),
     asyncHandler(updateBrand)
 )
 
@@ -32,6 +34,7 @@ brandRouter.delete('/delete/:brandId',
     asyncHandler(isAuthenticate()),
     isAuthorized([roles.ADMIN, roles.SELLER]),
     isValid(deleteBrandVal),
+    isActive(),
     asyncHandler(deleteBrand))
 
 // get all brand

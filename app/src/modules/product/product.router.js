@@ -5,7 +5,7 @@ import { fileUpload , asyncHandler, roles} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { createProduct, updateProduct,getAllProducts, deleteProduct } from "./product.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-
+import { isActive } from "../../middleware/isActive.js";
 
 const productRouter = Router();
 
@@ -18,7 +18,8 @@ productRouter.post('/create',
         {name: "mainImage", maxCount: 1},
         {name: "subImages", maxCount: 5}
     ]),
-    isValid(createProductVal), 
+    isValid(createProductVal),
+    isActive(),
     asyncHandler(createProduct)
 )
 
@@ -30,7 +31,8 @@ productRouter.put('/update/:productId',
         {name: "mainImage", maxCount: 1},
         {name: "subImages", maxCount: 5}
     ]),
-    isValid(updateProductVal), 
+    isValid(updateProductVal),
+    isActive(), 
     asyncHandler(updateProduct)
 )
 
@@ -42,6 +44,7 @@ productRouter.get('/',asyncHandler(getAllProducts))
  productRouter.delete('/:productId',
     asyncHandler(isAuthenticate()),
     isAuthorized([roles.ADMIN, roles.SELLER]),
+    isActive(),
     asyncHandler(deleteProduct))
 
 export default productRouter
