@@ -23,6 +23,7 @@ export const initApp = (app, express) => {
     app.use('/coupon', allRouters.couponRouter)
     app.use('/cart', allRouters.cartRouter)
     app.use('/user', allRouters.userRouter)
+    app.use('/order', allRouters.orderRouter)
     // global error handling
     app.use(globalErrorHandling)
     // start server

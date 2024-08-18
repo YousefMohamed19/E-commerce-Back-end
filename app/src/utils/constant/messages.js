@@ -13,7 +13,7 @@ export const messages = {
     category : {...generateMessage('category')},
     subcategory :{...generateMessage('subcategory')},
     brand : {...generateMessage('brand')},
-    product : {...generateMessage('product')},
+    product : {...generateMessage('product'),outOfStock: 'Product out of stock'},
     file: {...generateMessage('file'), required: 'file is required'},
     user: {...generateMessage('user'),
         verifySuccessfully: 'Your account verifed successfully',
@@ -29,8 +29,9 @@ export const messages = {
         addToWishlist: 'Added to wishlist successfully',
         notFoundWishlist: 'Your wishlist is empty'},
     review : {...generateMessage('review'),notFoundReview:'This product has no review'},
-    coupon : {...generateMessage('coupon'),invalidAmount:'Must be less than 100'},
+    coupon : {...generateMessage('coupon'),invalidAmount:'Must be less than 100',expired:'Coupon expired'},
     cart : {...generateMessage('cart'),
-        notFoundCart: 'Your cart is empty'}
+        notFoundCart: 'Your cart is empty'},
+    order : {...generateMessage('order')}
         
 }

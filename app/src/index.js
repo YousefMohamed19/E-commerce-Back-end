@@ -9,6 +9,7 @@ import reviewRouter from "./modules/review/review.router.js";
 import couponRouter from "./modules/coupon/coupon.router.js";
 import cartRouter from "./modules/cart/cart.router.js";
 import userRouter from "./modules/user/user.router.js";
+import orderRouter from "./modules/order/order.router.js";
 export { 
     categoryRouter,
     subcategoryRouter, 
@@ -20,5 +21,6 @@ export {
     reviewRouter, 
     couponRouter, 
     cartRouter,
-    userRouter
+    userRouter,
+    orderRouter
 }
