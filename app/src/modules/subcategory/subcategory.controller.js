@@ -1,6 +1,6 @@
 import slugify from "slugify"
-import { Category ,SubCategory} from "../../../db/index.js"
-import { AppError ,deleteFile,messages} from "../../utils/index.js"
+import { Category ,Product,SubCategory} from "../../../db/index.js"
+import { ApiFeature, AppError ,deleteFile,messages} from "../../utils/index.js"
 
 
 // create subcategory
@@ -125,6 +125,20 @@ export const deleteSubcategory = async (req, res, next) => {
     if (!subcategoryExist) {
         return next(new AppError(messages.subcategory.notFound, 404))
     }
+    
+    const products = await Product.find({ category: subcategoryId }).select(["mainImage", "subImages"])
+    const productIds = products.map(product => product._id) // [id1 , id2 , id3]
+
+    // delete products
+    await Product.deleteMany({ _id: { $in: productIds } });
+
+    // Delete images of products
+    products.forEach(product => {
+        deleteFile(product.mainImage);
+        product.subImages.forEach(image => {
+            deleteFile(image);
+        });
+    });
     // delete subcategory
     await SubCategory.deleteOne({_id:subcategoryId})
     // delete image
@@ -134,4 +148,12 @@ export const deleteSubcategory = async (req, res, next) => {
         message: messages.subcategory.deleteSuccessfully,
         success: true
     })
+}
+
+
+// get all subcategory
+export const getSubcategories = async (req, res, next) => {
+    const apiFeature = new ApiFeature(SubCategory.find().populate([{ path: 'category' }]), req.query).filter().sort().select().pagination()
+    const subcategories = await apiFeature.mongooseQuery
+    return res.status(200).json({message: messages.subcategory.getSuccessfully, data: subcategories, success: true })
 }

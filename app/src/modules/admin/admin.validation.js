@@ -1,6 +1,6 @@
 import joi from 'joi'
 import { generalFields } from '../../middleware/validation.js'
-
+// add user
 export const addUserVal = joi.object({
     userName: generalFields.name.required(),
     email: generalFields.email.required(),
@@ -8,6 +8,12 @@ export const addUserVal = joi.object({
     role: generalFields.role
 }).required()
 
+// add admin
+export const addAdminVal = joi.object({
+    userName: generalFields.name.required(),
+    email: generalFields.email.required(),
+    phone: generalFields.phone.required(),
+}).required()
 
 // delete user
 export const deleteUserVal = joi.object({

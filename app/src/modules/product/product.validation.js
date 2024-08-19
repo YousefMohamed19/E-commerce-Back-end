@@ -41,3 +41,8 @@ export const updateProductVal = joi.object({
     stock:generalFields.stock.min(0),
     productId:generalFields.objectId
 }).required()
+
+// get product validation
+export const getProductVal = joi.object({
+    productId:generalFields.objectId.required()
+}).required()

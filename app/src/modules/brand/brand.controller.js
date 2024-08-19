@@ -1,4 +1,4 @@
-import { Brand } from "../../../db/index.js"
+import { Brand, Product } from "../../../db/index.js"
 import { AppError, deleteFile, messages,ApiFeature } from "../../utils/index.js"
 
 // create brand
@@ -88,6 +88,22 @@ export const deleteBrand = async (req, res, next) => {
     if (!brandExist) {
         return next(new AppError(messages.brand.notFound, 404));
     }
+    // prepare ids
+    const products = await Product.find({ brand: brandId }).select(["mainImage", "subImages"])
+    const productIds = products.map(product => product._id)
+
+    // delete products
+    await Product.deleteMany({_id :{ $in: productIds }})
+
+    // delete products images
+    products.forEach(product => {
+        deleteFile(product.mainImage)
+        products.subImages.forEach(image => {
+            deleteFile(image)
+        })
+    })
+
+
     // delete image
     deleteFile(brandExist.logo);
     // delete brand
@@ -118,4 +134,15 @@ export const getAllBrands = async (req, res, next) => {
         message: messages.brand.getSuccessfully,
         data: brands
     });
+}
+
+
+// get brand
+export const getBrand = async (req, res, next) => {
+    const { brandId } = req.params
+    const brand = await Brand.findById(brandId).populate([{ path: "products" }])
+    if (!brand) {
+        return next(new AppError(messages.brand.notFound, 404))
+    }
+    return res.status(200).json({ data: brand, success: true })
 }

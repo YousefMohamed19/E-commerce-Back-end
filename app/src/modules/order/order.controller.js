@@ -19,7 +19,7 @@ export const createOrder = async (req, res,next) => {
         return next(new AppError(messages.cart.notFound, 404))
     }
     // check product
-    let orderProduct =[]
+    let orderProducts =[]
     let orderPrice =0
     for (const product of products) {
         const productExist = await Product.findById(product.productId)
@@ -29,8 +29,8 @@ export const createOrder = async (req, res,next) => {
         if (!productExist.inStock(product.quantity)) {
             return next(new AppError(messages.product.outOfStock, 400))
         }
-        orderProduct.push({
-            productId:productExist.productId,
+        orderProducts.push({
+            productId:productExist._id,
             title:productExist.title,
             itemPrice:productExist.finalPrice,
             quantity:product.quantity,
@@ -38,9 +38,18 @@ export const createOrder = async (req, res,next) => {
         })
         orderPrice += productExist.finalPrice * product.quantity
     }
-    const order = await Order({
+    // Calculate final price based on coupon type
+    let discount = 0;
+    if (couponExist.couponType === 'fixedAmount') {
+        discount = couponExist.couponAmount;
+    } else if (couponExist.couponType === 'percentage') {
+        discount = orderPrice * (couponExist.couponAmount / 100);
+    }
+    const finalPrice = Math.max(orderPrice - discount, 0);
+    // prepare data
+    const order = new Order({
         user: req.authUser._id,
-        products:orderProduct,
+        products:orderProducts,
         address,
         phone,
         coupon:{
@@ -51,7 +60,7 @@ export const createOrder = async (req, res,next) => {
         status:orderStatus.PLACED,
         payment,
         orderPrice,
-        finalPrice:orderPrice-(orderPrice*((couponExist?.couponAmount || 0)/100))
+        finalPrice
     })
     // prepare data
     const createdOrder = await order.save()

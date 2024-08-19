@@ -2,6 +2,8 @@ import { Cart, User } from "../../../db/index.js"
 import cloudinary from "../../utils/cloudinary.js"
 import { ApiFeature, AppError, hashPassword, messages, status } from "../../utils/index.js"
 
+
+// add user
 export const addUser = async (req, res, next) => {
     // get data from req
     const { userName, email, phone, role } = req.body
@@ -38,6 +40,40 @@ export const addUser = async (req, res, next) => {
     })
 }
 
+// add admin
+export const addAdmin = async (req, res, next) => {
+    // get data from req
+    const { userName, email, phone } = req.body
+    // check user admin
+    const userExist = await User.findOne({ email })// null , {}
+    if (userExist) {
+        return next(new AppError(messages.user.alreadyExist, 409))
+    }
+
+    // upload image
+    if (req.file) {
+        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { folder: "e-comerce/admin" })
+        req.body.image = { secure_url, public_id }
+    }
+    const hashedPassword = hashPassword({password:"admin123"})
+    const createdUser = await User.create({
+        userName,
+        email,
+        phone,
+        role:roles.ADMIN,
+        status: status.VERIFIED,
+        image: req.body.image,
+        password: hashedPassword
+    })
+    if (!createdUser) {
+        return next(new AppError(messages.user.failToCreate, 500))
+    }
+    return res.status(201).json({
+        message: messages.user.createdSuccessfully,
+        success: true,
+        data: createdUser
+    })
+}
 
 
 // get users
@@ -56,6 +92,7 @@ export const getUsers = async (req, res, next) => {
 }
 
 
+
 // delete user
 export const deleteUser = async (req, res, next) => {
         // get data from req
@@ -68,7 +105,7 @@ export const deleteUser = async (req, res, next) => {
         }
 
         // check if the requesting user is an admin and if they are trying to delete another admin
-        if (req.authUser.role === 'admin' && user.role === 'admin') {
+        if (req.authUser.role === 'admin' && user.role === 'admin' || req.authUser.role === 'superadmin' && user.role === 'superadmin') {
             return next(new AppError(messages.user.cannotDeleteAdmin, 403)); 
         }
 

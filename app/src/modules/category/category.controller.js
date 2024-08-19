@@ -231,7 +231,7 @@ export const CreateCategoryCloud = async (req, res, next) => {
     //add to database
     const createdCategory = await category.save()
     if (!createdCategory) {
-
+        
         return next(new AppError(messages.category.failToCreate, 500))
     }
     //send res
@@ -294,6 +294,11 @@ export const deleteCategoryCloud = async (req, res, next) => async (req, res, ne
 
 
 
+
+
+
+
+
 // update category with cloud
 export const updateCategoryCloud = async (req, res, next) => {
     const { categoryId } = req.params
@@ -306,5 +311,5 @@ export const updateCategoryCloud = async (req, res, next) => {
     category.name = req.body.name || category.name
     category.image = req.body.image || category.image// {secure_}
     await category.save()
-    return res.json('done')
+    return res.status(200).json({ message: messages.category.updateSuccessfully, success: true })
 }

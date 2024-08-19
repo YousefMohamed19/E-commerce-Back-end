@@ -9,7 +9,7 @@ const couponRouter = Router()
 // create coupon
 couponRouter.post('/add-coupon',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     isValid(createCouponVal),
     isActive(),
     asyncHandler(createCoupon)
@@ -18,14 +18,14 @@ couponRouter.post('/add-coupon',
 // get coupon
 couponRouter.get('/get-coupons',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     isActive(),
     asyncHandler(getCoupons))
 
 // update coupon
 couponRouter.put('/update-coupon/:couponId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     isValid(updateCouponVal),
     isActive(),
     asyncHandler(updateCoupon))
@@ -33,7 +33,7 @@ couponRouter.put('/update-coupon/:couponId',
 // delete coupon
 couponRouter.delete('/delete-coupon/:couponId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     isValid(deleteCouponVal),
     isActive(),
     asyncHandler(deleteCoupon))

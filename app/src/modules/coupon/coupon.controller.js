@@ -62,6 +62,9 @@ export const updateCoupon = async (req, res, next) => {
     if (!couponExist) {
         return next(new AppError(messages.coupon.notFound, 404))
     }
+    if(couponType === couponTypes.PERCENTAGE && couponAmount > 100) {
+        return next(new AppError(messages.coupon.invalidAmount, 400))
+    }
     // prepare data
     const updatedCoupon = await Coupon.findByIdAndUpdate(couponId, {
         couponCode,

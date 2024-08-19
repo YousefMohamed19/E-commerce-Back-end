@@ -18,6 +18,12 @@ const brandSchema = new Schema({
         ref: "User",
         required: true 
     }
-}, { timestamps: true });
+}, { timestamps: true , toJSON:{virtuals:true}, toObject:{virtuals:true}});
+// virtual
+brandSchema.virtual('products',{
+    ref:'Product',
+    localField:'_id',
+    foreignField:'brand',
+})
 //model
 export const Brand = model("Brand", brandSchema)

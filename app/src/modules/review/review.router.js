@@ -10,18 +10,22 @@ const reviewRouter = Router();
 // add & update review
 reviewRouter.post('/add-review',
     asyncHandler(isAuthenticate()),
+    isAuthorized([roles.CUSTOMER]),
     isValid(addReviewVal),
     isActive(),
     asyncHandler(addReview))
+
 // get reviews for product
 reviewRouter.get('/get-reviews/:productId',
     asyncHandler(isAuthenticate()),
     isValid(getReviewsVal),
     asyncHandler(getReviews))
+
 // delete review
+
 reviewRouter.delete('/delete-review/:reviewId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.CUSTOMER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN, roles.CUSTOMER]),
     isValid(deleteReviewVal),
     isActive(),
     asyncHandler(deleteReview))

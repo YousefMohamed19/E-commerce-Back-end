@@ -14,7 +14,7 @@ const orderRouter = Router();
 orderRouter.post('/create',
     asyncHandler(isAuthenticate()),
     isAuthorized(Object.values(roles)),
-    isValid(createOrderVal),
+    // isValid(createOrderVal),
     isActive(),
     asyncHandler(createOrder))
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { fileUpload ,asyncHandler,cloudUpload, roles} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
 import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal } from "./category.validation.js";
-import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory } from "./category.controller.js";
+import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory, updateCategoryCloud } from "./category.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
 const categoryRouter = Router()
@@ -14,7 +14,7 @@ const categoryRouter = Router()
 //add category 
 categoryRouter.post('/create',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     fileUpload({folder:'category'}).single('image'),
     isValid(addCategoryVal),
     isActive(),
@@ -25,7 +25,7 @@ categoryRouter.post('/create',
 // upadate category 
 categoryRouter.put('/update/:categoryId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     fileUpload({folder:'category'}).single('image'),
     isValid(updateCategoryVal),
     isActive(),
@@ -49,7 +49,7 @@ categoryRouter.get('/',
 // delete category
 categoryRouter.delete('/delete/:categoryId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     isValid(deleteCategoryVal),
     isActive(),
     asyncHandler(deletCategory)
@@ -59,7 +59,7 @@ categoryRouter.delete('/delete/:categoryId',
 // create category with cloud
 categoryRouter.post('/create-category-cloud',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     cloudUpload().single('image'),
     isValid(addCategoryVal),
     isActive(),
@@ -70,7 +70,7 @@ categoryRouter.post('/create-category-cloud',
 // delete category with cloud
 categoryRouter.delete('/delete-category-cloud',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     isActive(),
     asyncHandler(deleteCategoryCloud)
 )
@@ -79,9 +79,9 @@ categoryRouter.delete('/delete-category-cloud',
 // update category with cloud
 categoryRouter.put('/update-category-cloud/:categoryId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
     cloudUpload().single('image'),
     isValid(updateCategoryVal),
     isActive(),
-    asyncHandler(CreateCategoryCloud))
+    asyncHandler(updateCategoryCloud))
 export default categoryRouter

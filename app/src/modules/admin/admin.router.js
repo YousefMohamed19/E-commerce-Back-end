@@ -1,27 +1,36 @@
 import { Router } from "express";
 import { asyncHandler, cloudUpload, roles } from "../../utils/index.js";
-import { addUser, deleteUser, getUsers, updateUser } from "./admin.controller.js";
+import { addAdmin, addUser, deleteUser, getUsers, updateUser } from "./admin.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isValid } from "../../middleware/validation.js";
-import { addUserVal, deleteUserVal, updateUserVal } from "./admin.validation.js";
+import { addAdminVal, addUserVal, deleteUserVal, updateUserVal } from "./admin.validation.js";
 import { isActive } from "../../middleware/isActive.js";
 
 const adminRouter = Router();
 // add user 
 adminRouter.post('/add-user',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN,roles.SUPERADMIN]),
     cloudUpload().single('image'),
     isValid(addUserVal),
     isActive(),
     asyncHandler(addUser))
 
 
+// add admin
+adminRouter.post('/add-admin',
+    asyncHandler(isAuthenticate()),
+    isAuthorized([roles.ADMIN,roles.SUPERADMIN]),
+    cloudUpload().single('image'),
+    isValid(addAdminVal),
+    isActive(),
+    asyncHandler(addAdmin))
+
 
 // get users
 adminRouter.get('/get-users',
     asyncHandler(isAuthenticate()), 
-    isAuthorized([roles.ADMIN]), 
+    isAuthorized([roles.ADMIN,roles.SUPERADMIN]), 
     isActive(),
     asyncHandler(getUsers))
     
@@ -29,7 +38,7 @@ adminRouter.get('/get-users',
 // delete user
 adminRouter.delete('/delete-user/:userId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN,roles.SUPERADMIN]),
     isValid(deleteUserVal),
     isActive(),
     asyncHandler(deleteUser))
@@ -38,8 +47,10 @@ adminRouter.delete('/delete-user/:userId',
 // update user
 adminRouter.put('/update-user/:userId',
     asyncHandler(isAuthenticate()),
-    isAuthorized([roles.ADMIN]),
+    isAuthorized([roles.ADMIN,roles.SUPERADMIN]),
     isValid(updateUserVal),
     isActive(),
     asyncHandler(updateUser))
+
+
 export default adminRouter
