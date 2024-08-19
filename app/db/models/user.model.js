@@ -57,7 +57,9 @@ const userSchema = new Schema(
         }
         ],
         otp: Number,
-        expireDateOtp: Date
+        expireDateOtp: Date,
+        otpAttempts: { type: Number, default: 0 }
+
     }, {
     timestamps: true,
     toJSON: { virtuals: true },

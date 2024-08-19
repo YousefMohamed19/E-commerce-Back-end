@@ -21,7 +21,7 @@ export const couponTypes = {
 Object.freeze(couponTypes)
 
 export const orderStatus = {
-    PLACED: "placed",
+    PLACED: "placed",  
     SHIPPING: "shipping",
     DELIVERED: "delivered",
     CANCELED: "canceled",

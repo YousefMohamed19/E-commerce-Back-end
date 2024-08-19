@@ -36,6 +36,6 @@ export const messages = {
     coupon : {...generateMessage('coupon'),invalidAmount:'Must be less than 100',expired:'Coupon expired'},
     cart : {...generateMessage('cart'),
         notFoundCart: 'Your cart is empty'},
-    order : {...generateMessage('order')}
+    order : {...generateMessage('order'),notAllowed:'Order not allowed',notFound:'Order not found'}
         
 }

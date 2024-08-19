@@ -9,3 +9,11 @@ export const createOrderVal = joi.object({
     coupon: generalFields.coupon, 
     payment: generalFields.payment.required()
 }).required()
+
+
+// update order
+export const updateOrderVal = joi.object({
+    orderId: generalFields.objectId.required(),
+    address:generalFields.address.required,
+    phone: generalFields.phone.required(),
+}).required()
