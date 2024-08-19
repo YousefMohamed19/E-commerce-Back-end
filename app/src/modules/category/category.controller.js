@@ -47,45 +47,57 @@ export const addCategory = async (req, res,next) => {
 
 
 // update category
-export const updateCategory =async (req, res,next) => {
-    //get data from req
-    const {categoryId} = req.params
-    const {name} = req.body
-    //check existance
-    const categoryExist = await Category.findById(categoryId)
-    if(!categoryExist) {
-        req.failImage = req.file.path
-        return next(new AppError(messages.category.notFound, 404))
-    }
-    //check name existance
-    const nameExist = await Category.findOne({name, _id:{$ne:categoryId}})
-    if(nameExist) {
-        return next(new AppError(messages.category.alreadyExist, 409))
-    }
-    // prepare data
-    if (name) {
-        categoryExist.slug = slugify(name)
-    }
-    // update image
-    if(req.file) {
-        //delete old image
-        deleteFile(categoryExist.image)
-        // update new image
-        categoryExist.image.path = req.file.path
-    }
-    // update to db
-    const updatedCategory=await categoryExist.save()
-    if(!updatedCategory) {
-        req.failImage =req.file.path
-        return next(new AppError(messages.category.failToUpdate, 500))
-    }
-    // send response
-    return res.status(200).json({
-        message: messages.category.updateSuccessfully,
-        success:true,
-        data:updatedCategory
-    })
-}
+export const updateCategory = async (req, res, next) => {
+    
+        // Get data from request
+        const { categoryId } = req.params;
+        const { name } = req.body;
+
+        // Check if the category exists
+        const categoryExist = await Category.findById(categoryId);
+        if (!categoryExist) {
+            return next(new AppError(messages.category.notFound, 404));
+        }
+
+        // Check if a category with the new name already exists (excluding the current category)
+        const nameExist = await Category.findOne({ name, _id: { $ne: categoryId } });
+        if (nameExist) {
+            return next(new AppError(messages.category.alreadyExist, 409));
+        }
+
+        // Prepare data for update
+        categoryExist.name = name;
+        categoryExist.slug = slugify(name);
+
+        // Handle image update
+        if (req.file) {
+            // Delete old image if it exists
+            if (categoryExist.image?.path) {
+                deleteFile(categoryExist.image.path);
+            }
+            // Update to new image path
+            categoryExist.image = { path: req.file.path };
+        }
+
+        // Update category in the database
+        const updatedCategory = await categoryExist.save();
+        if (!updatedCategory) {
+            // In case of failure, delete the new image if it was uploaded
+            if (req.file && req.file.path) {
+                deleteFile(req.file.path);
+            }
+            return next(new AppError(messages.category.failToUpdate, 500));
+        }
+
+        // Send response
+        return res.status(200).json({
+            message: messages.category.updateSuccessfully,
+            success: true,
+            data: updatedCategory,
+        });
+
+};
+
 
 
 
@@ -301,15 +313,41 @@ export const deleteCategoryCloud = async (req, res, next) => async (req, res, ne
 
 // update category with cloud
 export const updateCategoryCloud = async (req, res, next) => {
-    const { categoryId } = req.params
-    const category = await Category.findById(categoryId)
+        // get data from req
+    const { name } = req.body;
+    const {coategoryId} = req.params
+    // check category
+    const category = await Category.findById(coategoryId);
+    if (!category) {
+        return next(new AppError(messages.category.notFound, 404));
+    }
+    // check image by all cases
     if (req.file) {
-        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { public_id: category.image.public_id })
+        //check category have imge but non deafult
+        if(category.image && category.image.public_id !==process.env.PUBLIC_ID){
+            await cloudinary.uploader.destroy(category.image.public_id);
+        }
+        // upload image
+        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+            folder:"e-comerce/category",
+        })
         req.body.image = { secure_url, public_id }
     }
+    // update name
+        category.name = name
+        category.slug = slugify(name)
+        
+    category.name=name || category.name
+    category.slug=slugify(name) || category.slug
+   
+    category.image=req.body.image || category.image
 
-    category.name = req.body.name || category.name
-    category.image = req.body.image || category.image// {secure_}
-    await category.save()
-    return res.status(200).json({ message: messages.category.updateSuccessfully, success: true })
+    const updateCategory = await category.save();
+    if (!updateCategory) {
+        return next(new AppError(messages.category.failToUpdate, 500));
+    }
+    // Send response
+    return res.status(200).json({ message: messages.category.updateSuccessfully, success: true, data: updateCategory });
+
 }
+

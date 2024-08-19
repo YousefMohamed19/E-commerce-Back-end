@@ -9,6 +9,7 @@ deletePendingUsers()
 handleDeletedUsers()
 deleteExpiredCoupons()
 
+
 dotenv.config({ path: path.resolve('./config/.env') })
 initApp(app, express)
 

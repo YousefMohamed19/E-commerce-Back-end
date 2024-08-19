@@ -1,4 +1,4 @@
-import { User } from "../../../db/index.js"
+import { Cart, User } from "../../../db/index.js"
 import cloudinary from "../../utils/cloudinary.js"
 import { comparePassword, hashPassword,AppError,messages, deleteFile, status, generateToken, sendEmail } from "../../utils/index.js"
 // reset password
@@ -111,6 +111,8 @@ export const deleteUser = async (req, res, next) => {
     if (!deletedUser) {
         return next(new AppError(messages.user.failToDelete, 500))
     }
+    // delete cart
+    await Cart.deleteMany({ user: userId })
     // send response
     return res.status(200).json({ message: messages.user.deleteSuccessfully, success: true })
 }

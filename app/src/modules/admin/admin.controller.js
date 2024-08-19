@@ -1,12 +1,12 @@
 import { Cart, User } from "../../../db/index.js"
 import cloudinary from "../../utils/cloudinary.js"
-import { ApiFeature, AppError, hashPassword, messages, status } from "../../utils/index.js"
+import { ApiFeature, AppError, hashPassword, messages, roles, status } from "../../utils/index.js"
 
 
 // add user
 export const addUser = async (req, res, next) => {
     // get data from req
-    const { userName, email, phone, role } = req.body
+    const { userName, email, phone, role,address,DOB } = req.body
     // check user existance
     const userExist = await User.findOne({ email })
     if (userExist) {
@@ -25,6 +25,8 @@ export const addUser = async (req, res, next) => {
         role,
         password: hashedPassword,
         status:status.VERIFIED,
+        address:JSON.parse(address),
+        DOB,
         image: req.body.image
     })  
     if (!createdUser) {
@@ -43,7 +45,7 @@ export const addUser = async (req, res, next) => {
 // add admin
 export const addAdmin = async (req, res, next) => {
     // get data from req
-    const { userName, email, phone } = req.body
+    const { userName, email, phone ,address, DOB} = req.body
     // check user admin
     const userExist = await User.findOne({ email })// null , {}
     if (userExist) {
@@ -63,13 +65,17 @@ export const addAdmin = async (req, res, next) => {
         role:roles.ADMIN,
         status: status.VERIFIED,
         image: req.body.image,
-        password: hashedPassword
+        password: hashedPassword,
+        address:JSON.parse(address),
+        DOB
     })
     if (!createdUser) {
         return next(new AppError(messages.user.failToCreate, 500))
     }
+    // create cart for the user
+    await Cart.create({ user: createdUser._id, products: [] });
     return res.status(201).json({
-        message: messages.user.createdSuccessfully,
+        message: messages.user.createSuccessfully,
         success: true,
         data: createdUser
     })
@@ -116,6 +122,7 @@ export const deleteUser = async (req, res, next) => {
         if (user.image) {
             await cloudinary.uploader.destroy(user.image.public_id);
         }
+        await Cart.deleteMany({ user: userId });
 
         // send response
         res.status(200).json({

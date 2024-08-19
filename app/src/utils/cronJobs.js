@@ -1,6 +1,6 @@
 // schedulers.js
 import schedule from 'node-schedule';
-import { Coupon, User } from '../../db/index.js';
+import { Cart, Coupon, User } from '../../db/index.js';
 import { status } from './constant/enums.js';
 
 // Job to delete users with PENDING status older than 30 days
@@ -62,6 +62,7 @@ export const deleteExpiredCoupons = ()=>{
         await Coupon.deleteMany({ _id: { $in: couponIds } });
     });
 }
+
 
 // export const test =()=>{
 //     schedule.scheduleJob('* * * * * *', async function () {

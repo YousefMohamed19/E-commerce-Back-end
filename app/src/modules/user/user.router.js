@@ -27,7 +27,7 @@ userRouter.get('/get-profile',
 userRouter.put('/update-profile', 
     asyncHandler(isAuthenticate()), 
     cloudUpload().single('image'),
-    // isValid(updateUserVal), 
+    isValid(updateUserVal), 
     isActive(),
     asyncHandler(updateUser))
 

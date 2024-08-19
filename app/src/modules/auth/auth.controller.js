@@ -3,7 +3,7 @@ import { AppError, messages , sendEmail, generateToken, verifyToken, status, com
 
 export const signUp = async(req, res, next) => {
     // get data from req
-    let { userName, email, password, phone,DOB } = req.body   
+    let { userName, email, password, phone,DOB ,address} = req.body   
     // check existance
     const userExist = await User.findOne({ $or: [{ email }, { phone }] })
     if (userExist) {
@@ -17,6 +17,8 @@ export const signUp = async(req, res, next) => {
         email,
         password,
         phone,
+        DOB,
+        address
     })
     // save data
     const createdUser = await user.save()
