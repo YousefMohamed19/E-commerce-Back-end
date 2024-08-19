@@ -12,6 +12,3 @@ deleteExpiredCoupons()
 dotenv.config({ path: path.resolve('./config/.env') })
 initApp(app, express)
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-  });
