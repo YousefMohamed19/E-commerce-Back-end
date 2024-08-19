@@ -1,11 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "index.js": {
+    "app/index.js": {
       "runtime": "nodejs20.x"
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.js" }
+    { "source": "/(.*)", "destination": "/app/index.js" }
   ]
 }
