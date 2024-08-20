@@ -19,7 +19,8 @@ export const createBrand = async (req, res, next) => {
     // prepare data
     const brand = new Brand({
         name,
-        logo: req.file.path
+        logo: req.file.path,
+        createdBy: req.authUser._id
     });
     // save data
     const createdBrand = await brand.save();
@@ -46,7 +47,7 @@ export const updateBrand = async (req, res, next) => {
     const brandExist = await Brand.findById(brandId);
     if (!brandExist) {
         // remove file
-        deleteFile(brandExist.logo.path);
+        req.failImage = req.file.path
         return next(new AppError(messages.brand.notFound, 404));
     }
     // check name
@@ -59,13 +60,13 @@ export const updateBrand = async (req, res, next) => {
     }
     if(req.file){
         deleteFile(brandExist.logo.path)
-        brandExist.logo = req.file.path
+        brandExist.logo = {path:req.file.path}
     }
     // save data
     const updatedBrand = await brandExist.save();
     if (!updatedBrand) {
         // remove file
-        deleteFile(brandExist.logo.path);
+        req.failImage = req.file.path
         return next(new AppError(messages.brand.failToUpdate, 500));
     }
     // send response

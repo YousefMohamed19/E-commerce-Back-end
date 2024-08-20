@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { asyncHandler, fileUpload, roles } from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
-import { createBrandVal, deleteBrandVal, updateBrandVal } from "./brand.validation.js";
+import { createBrandVal, deleteBrandVal, getSpecificBrandVal, updateBrandVal } from "./brand.validation.js";
 import { createBrand, deleteBrand, getAllBrands, getBrand, updateBrand } from "./brand.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
@@ -42,7 +42,8 @@ brandRouter.get('/',asyncHandler(getAllBrands))
 
 
 // get brands
-brandRouter.get('/',
+brandRouter.get('/:brandId',
+    isValid(getSpecificBrandVal),
     asyncHandler(getBrand)
 )
 

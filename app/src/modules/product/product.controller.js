@@ -54,7 +54,9 @@ export const createProduct = async (req,res,next) => {
         discount,
         size:JSON.parse(size),
         colors:JSON.parse(colors),
-        stock
+        stock,
+        createdBy:req.authUser._id,
+        updatedBy:req.authUser._id
     })
 
     // save product
@@ -134,7 +136,8 @@ export const updateProduct = async (req,res,next) => {
         discount,
         size:JSON.parse(size),
         colors:JSON.parse(colors),
-        stock
+        stock,
+        updatedBy:req.authUser._id
     })
     if (!updatedProduct) {
         deleteImage()

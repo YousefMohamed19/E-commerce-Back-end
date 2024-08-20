@@ -41,10 +41,10 @@ const productSchema = new Schema({
         ref: "User",
         required: true 
     },
-    updatedBY: {
+    updatedBy: {
         type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true 
+        ref: "User", 
+        required: true
     },
     //=================images====================//
     mainImage: {

@@ -14,3 +14,8 @@ export const updateBrandVal = joi.object({
 export const deleteBrandVal = joi.object({
     brandId: generalFields.objectId.required()
 })
+
+// get brand validation
+export const getSpecificBrandVal = joi.object({
+    brandId: generalFields.objectId
+})

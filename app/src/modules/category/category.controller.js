@@ -321,27 +321,24 @@ export const updateCategoryCloud = async (req, res, next) => {
     if (!category) {
         return next(new AppError(messages.category.notFound, 404));
     }
-    // check image by all cases
-    if (req.file) {
-        //check category have imge but non deafult
-        if(category.image && category.image.public_id !==process.env.PUBLIC_ID){
-            await cloudinary.uploader.destroy(category.image.public_id);
+    // prepare data
+    category.name = name
+    category.slug = slugify(name)
+    // handle image
+    if(req.file){
+        // delete old image
+        if(category.image?.public_id){
+            await cloudinary.uploader.destroy(category.image.public_id)
         }
-        // upload image
-        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
-            folder:"e-comerce/category",
-        })
-        req.body.image = { secure_url, public_id }
+        // upload new image
+        const {secure_url,public_id}= await cloudinary.uploader.upload(req.file.path,
+            {
+                folder: 'e-comerce/category'
+                // public_id:category.image.public_id
+            })
+        category.image = {secure_url,public_id}
     }
-    // update name
-        category.name = name
-        category.slug = slugify(name)
-        
-    category.name=name || category.name
-    category.slug=slugify(name) || category.slug
-   
-    category.image=req.body.image || category.image
-
+    // update category
     const updateCategory = await category.save();
     if (!updateCategory) {
         return next(new AppError(messages.category.failToUpdate, 500));

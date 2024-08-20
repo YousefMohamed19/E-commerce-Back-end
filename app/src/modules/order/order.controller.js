@@ -36,7 +36,8 @@ export const createOrder = async (req, res,next) => {
         orderProducts.push({
             productId:productExist._id,
             title:productExist.title,
-            itemPrice:productExist.finalPrice,
+            itemPrice:productExist.price,
+            discount:productExist.discount,
             quantity:product.quantity,
             finalPrice:productExist.finalPrice * product.quantity
         })
@@ -66,7 +67,6 @@ export const createOrder = async (req, res,next) => {
         orderPrice,
         finalPrice
     })
-
     // prepare data
     const createdOrder = await order.save()
     if (!createdOrder) {
