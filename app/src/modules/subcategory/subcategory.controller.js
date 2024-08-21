@@ -154,7 +154,7 @@ export const deleteSubcategory = async (req, res, next) => {
 
 // get all subcategory
 export const getSubcategories = async (req, res, next) => {
-    const apiFeature = new ApiFeature(SubCategory.find(), req.query).filter().sort().select().pagination()
+    const apiFeature = new ApiFeature(SubCategory.find().populate('category'), req.query).filter().sort().select().pagination()
     const subcategories = await apiFeature.mongooseQuery
     return res.status(200).json({message: messages.subcategory.getSuccessfully, data: subcategories, success: true })
 }

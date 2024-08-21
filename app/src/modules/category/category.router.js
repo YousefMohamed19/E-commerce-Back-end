@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { fileUpload ,asyncHandler,cloudUpload, roles} from "../../utils/index.js";
 import { isValid } from "../../middleware/validation.js";
-import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal } from "./category.validation.js";
+import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal, deleteCategoryCloudVal } from "./category.validation.js";
 import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory, updateCategoryCloud } from "./category.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
@@ -68,9 +68,10 @@ categoryRouter.post('/create-category-cloud',
 
 
 // delete category with cloud
-categoryRouter.delete('/delete-category-cloud',
+categoryRouter.delete('/delete-category-cloud/:categoryId',
     asyncHandler(isAuthenticate()),
     isAuthorized([roles.ADMIN, roles.SUPERADMIN]),
+    isValid(deleteCategoryCloudVal),
     isActive(),
     asyncHandler(deleteCategoryCloud)
 )

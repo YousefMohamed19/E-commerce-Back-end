@@ -26,3 +26,8 @@ export const getCategoryVal = joi.object({
 export const deleteCategoryVal = joi.object({
     categoryId:generalFields.objectId.required()
 }).required()
+
+// delete category cloud validation
+export const deleteCategoryCloudVal = joi.object({
+    categoryId:generalFields.objectId.required()
+}).required()
