@@ -86,7 +86,7 @@ export const createOrder = async (req, res,next) => {
                         product_data: {
                             name: product.title
                         },
-                        unit_amount: product.price 
+                        unit_amount: product.finalPrice * 100
                     },
                     quantity: product.quantity
                 }
