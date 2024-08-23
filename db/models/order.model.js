@@ -17,7 +17,6 @@ const orderSchema = new Schema({
         phone: String,
         street: String,
     },
-    phone: { type: String, required: true },
     coupon: {
         couponId: { type: Schema.Types.ObjectId, ref: "Coupon" },
         code: String,
