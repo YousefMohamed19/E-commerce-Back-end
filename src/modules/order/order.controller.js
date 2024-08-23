@@ -55,7 +55,7 @@ export const createOrder = async (req, res,next) => {
     const order = new Order({
         user: req.authUser._id,
         products:orderProducts,
-        address,
+        address:JSON.parse(address),
         phone,
         coupon:{
             couponId: couponExist?._id,
