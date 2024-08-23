@@ -75,8 +75,8 @@ export const createOrder = async (req, res,next) => {
     if (payment === 'visa') {
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
         const checkout = await stripe.checkout.sessions.create({
-            success_url:"google.com",
-            cancel_url:"facebook.com",
+            success_url:"www.google.com",
+            cancel_url:"www.facebook.com",
             payment_method_types:["card"],
             mode:"payment",
             line_items: createdOrder.products.map(product => {
