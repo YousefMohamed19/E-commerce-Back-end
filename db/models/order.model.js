@@ -13,7 +13,10 @@ const orderSchema = new Schema({
             finalPrice: Number
         }
     ],
-    address: { type: String, required: true },
+    address: {
+        phone: String,
+        street: String,
+    },
     phone: { type: String, required: true },
     coupon: {
         couponId: { type: Schema.Types.ObjectId, ref: "Coupon" },

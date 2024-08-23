@@ -1,9 +1,10 @@
+import Stripe from "stripe"
 import { Cart, Coupon, Product ,Order} from "../../../db/index.js"
 import { ApiFeature, AppError, messages, orderStatus } from "../../utils/index.js"
 // create order
 export const createOrder = async (req, res,next) => {
     // get data from req
-    const { address, phone, coupon, payment } = req.body
+    const { street, phone, coupon, payment } = req.body
     // check coupon
     const couponExist = await Coupon.findOne({couponCode: coupon})
     if (!couponExist) {
@@ -55,8 +56,7 @@ export const createOrder = async (req, res,next) => {
     const order = new Order({
         user: req.authUser._id,
         products:orderProducts,
-        address:JSON.parse(address),
-        phone,
+        address:{street ,phone},
         coupon:{
             couponId: couponExist?._id,
             code: couponExist?.couponCode,
@@ -72,9 +72,34 @@ export const createOrder = async (req, res,next) => {
     if (!createdOrder) {
         return next(new AppError(messages.order.failToCreate, 500))
     }
-    // if (payment === 'visa') {
+    if (payment === 'visa') {
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+        const checkout = await stripe.checkout.sessions.create({
+            success_url:"google.com",
+            cancel_url:"facebook.com",
+            payment_method_types:["card"],
+            mode:"payment",
+            line_items: createdOrder.products.map(product => {
+                return {
+                    price_data: {
+                        currency: "egp",
+                        product_data: {
+                            name: product.title
+                        },
+                        unit_amount: product.finalPrice
+                    },
+                    quantity: product.quantity
+                }
+            })
+        })
 
-    // }
+        return res.status(200).json({ 
+            message: messages.order.createSuccessfully,
+            success: true,
+            data: createdOrder,
+            url: checkout.url
+        })
+    }
     // send response
     return res.status(201).json({
         message: messages.order.createSuccessfully,
