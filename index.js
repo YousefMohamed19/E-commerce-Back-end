@@ -13,6 +13,7 @@ deleteExpiredCoupons()
 
 
 dotenv.config({ path: path.resolve('./config/.env') })
+const port = process.env.PORT || 3000;
 initApp(app, express)
 app.post('/webhook',
     express.raw({ type: 'application/json' }),
