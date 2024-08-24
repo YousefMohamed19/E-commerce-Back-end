@@ -1,6 +1,7 @@
 import { connectDB } from "../db/connection.js"
-import * as allRouters from './index.js' 
+import * as allRouters from './index.js'
 import { globalErrorHandling } from "./utils/asyncHandler.js"
+import { webhook } from "./utils/webhook.js"
 
 export const initApp = (app, express) => {
     // parse data
@@ -24,9 +25,14 @@ export const initApp = (app, express) => {
     app.use('/cart', allRouters.cartRouter)
     app.use('/user', allRouters.userRouter)
     app.use('/order', allRouters.orderRouter)
-
+    app.post('/webhook',
+        express.raw({ type: 'application/json' }),
+        webhook
+      );
     // global error handling
     app.use(globalErrorHandling)
-    // start server
     
+    
+    // start server
+    app.listen(port, () => console.log('server is running on port', port))
 }
