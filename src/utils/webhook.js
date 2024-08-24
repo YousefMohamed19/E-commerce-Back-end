@@ -4,7 +4,7 @@ import { asyncHandler } from "./asyncHandler.js";
 
 export const webhook = asyncHandler(async (req, res) => {
     const sig = req.headers['stripe-signature'].toString();
-    const stripe = new Stripe('sk_test_51PpaGLP829c5C7AK3uaBUMuIUEqLECKIbtbwqDVIX1LLcgYMPE2y5cuyvERhjKYdHs5eJgEnGp5UNn6IcLB5Ku9B00tygmYZpK')
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
     let event = Stripe.webhooks.constructEvent(req.body, sig, 'whsec_KpOJGP7USpDiZYdGtkqHUMSgABqPz9rj');
 
     if (event.type == 'checkout.session.completed') {
