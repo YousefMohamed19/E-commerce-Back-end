@@ -24,8 +24,9 @@ export const initApp = (app, express) => {
     app.use('/cart', allRouters.cartRouter)
     app.use('/user', allRouters.userRouter)
     app.use('/order', allRouters.orderRouter)
+
     // global error handling
     app.use(globalErrorHandling)
     // start server
-    app.listen(port, () => console.log('server is running on port', port))
+    
 }
