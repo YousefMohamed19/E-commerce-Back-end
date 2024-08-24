@@ -6,7 +6,7 @@ export const webhook = asyncHandler(
     async (req, res) => {
         const sig = req.headers['stripe-signature'].toString()
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-        let event = stripe.webhooks.constructEvent(req.body, sig, 'whsec_9tc9ABjo2hhKEk0yIgUWdvW8KW0Jkx70');
+        let event = stripe.webhooks.constructEvent(req.body, sig, 'whsec_txqOit5SFPqEfAveBGiQilboSOLkj9WO');
 
 
         // Handle the event checkout.session.completed
