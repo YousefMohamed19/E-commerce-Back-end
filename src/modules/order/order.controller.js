@@ -4,9 +4,9 @@ import { ApiFeature, AppError, messages, orderStatus } from "../../utils/index.j
 // create order
 export const createOrder = async (req, res,next) => {
     // get data from req
-    const { street, phone, coupon, payment } = req.body
+    const { address, phone, coupon, payment } = req.body
     // check coupon
-    const couponExist = await Coupon.findOne({couponCode: coupon})
+    const couponExist = await Coupon.findOne({ couponCode: coupon })
     if (!couponExist) {
         return next(new AppError(messages.coupon.notFound, 404))
     }
@@ -15,35 +15,36 @@ export const createOrder = async (req, res,next) => {
         return next(new AppError("Invalid coupon", 404));
     }
     // check cart
-    const cart = await Cart.findOne({ user: req.authUser._id }).populate('products.productId')
+    const cart = await Cart.findOne({ user: req.authUser._id }).populate("products.productId")
     const products = cart.products
-    if(products.length <= 0) {
-        return next(new AppError(messages.cart.notFound, 404))
+    if (products.length <= 0) {
+        return next(new AppError("cart is empty", 400))
     }
-    // check product
-    let orderProducts =[]
-    let orderPrice =0
+    // check products
+    let orderProducts = []
+    let orderPrice = 0
     for (const product of products) {
         const productExist = await Product.findById(product.productId)
         if (!productExist) {
             return next(new AppError(messages.product.notFound, 404))
         }
         if (!productExist.inStock(product.quantity)) {
-            return next(new AppError(messages.product.outOfStock, 400))
+            return next(new AppError("product is out of stock", 400))
         }
-            // Decrement product stock
+        // Decrement product stock
         await Product.findByIdAndUpdate(productExist._id, {
             $inc: { stock: -product.quantity }
         });
+
         orderProducts.push({
-            productId:productExist._id,
-            title:productExist.title,
-            itemPrice:productExist.price,
-            discount:productExist.discount,
-            quantity:product.quantity,
-            finalPrice:productExist.finalPrice * product.quantity
+            productId: product.productId,
+            name:productExist.title,
+            title: productExist.title,
+            itemPrice: productExist.finalPrice,
+            quantity: product.quantity,
+            finalPrice: product.quantity * productExist.finalPrice
         })
-        orderPrice += productExist.finalPrice * product.quantity
+        orderPrice += product.quantity * productExist.finalPrice
     }
     // Calculate final price based on coupon type
     let discount = 0;
@@ -53,32 +54,33 @@ export const createOrder = async (req, res,next) => {
         discount = orderPrice * (couponExist.couponAmount / 100);
     }
     const finalPrice = Math.max(orderPrice - discount, 0);
-    // prepare data
+
     const order = new Order({
         user: req.authUser._id,
-        products:orderProducts,
-        address:{street ,phone},
-        coupon:{
+        products: orderProducts,
+        address,
+        phone,
+        coupon: {
             couponId: couponExist?._id,
             code: couponExist?.couponCode,
             discount: couponExist?.couponAmount
         },
-        status:orderStatus.PLACED,
+        status: orderStatus.PLACED,
         payment,
         orderPrice,
         finalPrice
     })
-    // prepare data
     const createdOrder = await order.save()
     if (!createdOrder) {
         return next(new AppError(messages.order.failToCreate, 500))
     }
-    if (payment === 'visa') {
-        // integrate payment gateway
+    if(payment === 'visa'){
+        
+    // integrate payment gateway
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const checkout = await stripe.checkout.sessions.create({
-        success_url: "https://www.google.com/",  // replace with your actual success URL
-        cancel_url: "https://www.facebook.com/",  // replace with your actual cancel URL
+        success_url: "https://www.google.com",  // replace with your actual success URL
+        cancel_url: "https://www.facebook.com",  // replace with your actual cancel URL
         payment_method_types: ["card"],
         mode: "payment",
         metadata: {
@@ -93,26 +95,26 @@ export const createOrder = async (req, res,next) => {
                     product_data: {
                         name: product.title,
                     },
-                    unit_amount: (Number(product.itemPrice) - Number(product.itemPrice) * (Number(couponExist.couponAmount) / 100)) * 100 
+                    unit_amount: (product.itemPrice - product.itemPrice * (couponExist.couponAmount / 100))*100, 
                 },
                 quantity: product.quantity,
             };
         }),
     });
 
-        return res.status(200).json({ 
-            message: messages.order.createSuccessfully,
-            success: true,
-            data: createdOrder,
-            url: checkout.url
-        })
-    }
-    // send response
-    return res.status(201).json({
+    return res.status(200).json({
         message: messages.order.createSuccessfully,
         success: true,
-        data: createdOrder
+        data: createdOrder,
+        url: checkout.url,
     })
+    }
+    
+        return res.status(200).json({
+            message: messages.order.createSuccessfully,
+            success: true,
+            data: createdOrder
+        });
 }
 
 
