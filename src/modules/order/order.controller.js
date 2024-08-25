@@ -73,28 +73,31 @@ export const createOrder = async (req, res,next) => {
         return next(new AppError(messages.order.failToCreate, 500))
     }
     if (payment === 'visa') {
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-        const checkout = await stripe.checkout.sessions.create({
-            success_url:"https://www.google.com",
-            cancel_url:"https://www.facebook.com",
-            payment_method_types:["card"],
-            mode:"payment",
-            metadata: {
-                orderId: createdOrder._id.toString()
-            },
-            line_items: createdOrder.products.map(product => {
-                return {
-                    price_data: {
-                        currency: "egp",
-                        product_data: {
-                            name: product.title
-                        },
-                        unit_amount: ( product.itemPrice - (product.itemPrice * (couponExist.couponAmount / 100)))*100
+        // integrate payment gateway
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const checkout = await stripe.checkout.sessions.create({
+        success_url: "https://www.google.com/",  // replace with your actual success URL
+        cancel_url: "https://www.facebook.com/",  // replace with your actual cancel URL
+        payment_method_types: ["card"],
+        mode: "payment",
+        metadata: {
+            orderId: createdOrder._id.toString(),
+            // clear cart
+            // update order status (placed)
+        },
+        line_items: createdOrder.products.map((product) => {
+            return {
+                price_data: {
+                    currency: "egp",
+                    product_data: {
+                        name: product.title,
                     },
-                    quantity: product.quantity
-                }
-            })
-        })
+                    unit_amount: (product.itemPrice - product.itemPrice * (couponExist.couponAmount / 100))*100, 
+                },
+                quantity: product.quantity,
+            };
+        }),
+    });
 
         return res.status(200).json({ 
             message: messages.order.createSuccessfully,
