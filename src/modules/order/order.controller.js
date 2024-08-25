@@ -10,8 +10,9 @@ export const createOrder = async (req, res,next) => {
     if (!couponExist) {
         return next(new AppError(messages.coupon.notFound, 404))
     }
-    if(couponExist.fromDate > Date.now() || couponExist.toDate < Date.now()) {
-        return next(new AppError(messages.coupon.expired, 400))
+    const currentDate = new Date();
+    if (new Date(couponExist.fromDate) > currentDate || new Date(couponExist.toDate) < currentDate) {
+        return next(new AppError("Invalid coupon", 404));
     }
     // check cart
     const cart = await Cart.findOne({ user: req.authUser._id }).populate('products.productId')
@@ -92,7 +93,7 @@ export const createOrder = async (req, res,next) => {
                     product_data: {
                         name: product.title,
                     },
-                    unit_amount: (product.itemPrice - product.itemPrice * (couponExist.couponAmount / 100))*100, 
+                    unit_amount: (Number(product.itemPrice) - Number(product.itemPrice) * (Number(couponExist.couponAmount) / 100)) * 100 
                 },
                 quantity: product.quantity,
             };
