@@ -1,8 +1,16 @@
 import { connectDB } from "../db/connection.js"
 import * as allRouters from './index.js'
 import { globalErrorHandling } from "./utils/asyncHandler.js"
+import { webhook } from "./utils/webhook.js";
 
 export const initApp = (app, express) => {
+    app.post('/webhook',
+        express.raw({ type: 'application/json' }),
+        webhook
+      );
+
+
+
     // parse data
     app.use(express.json())
     // serve static
@@ -26,8 +34,6 @@ export const initApp = (app, express) => {
     app.use('/order', allRouters.orderRouter)
     // global error handling
     app.use(globalErrorHandling)
-    
-    
     // start server
     app.listen(port, () => console.log('server is running on port', port))
 }
