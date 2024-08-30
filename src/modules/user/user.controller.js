@@ -10,7 +10,7 @@ export const resetPassword = async (req, res, next) => {
     // check user password
     const match = comparePassword({ password: oldPassword, hashPassword: req.authUser.password })
     if (!match) {
-        return next(new AppError(messages.password.invalidCredential, 401))
+        return next(new AppError(messages.user.invalidCredentials, 401))
     }
     // hash password
     const hashedPassword = hashPassword({ password: newPassword })
