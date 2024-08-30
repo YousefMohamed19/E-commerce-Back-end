@@ -1,6 +1,6 @@
 import slugify from "slugify"
-import { Category ,Product,SubCategory} from "../../../db/index.js"
-import { ApiFeature, AppError ,deleteFile,messages} from "../../utils/index.js"
+import { Category, Product, SubCategory } from "../../../db/index.js"
+import { ApiFeature, AppError, deleteFile, messages } from "../../utils/index.js"
 
 
 // create subcategory

@@ -1,6 +1,6 @@
-import { connectDB } from "../db/connection.js"
-import * as allRouters from './index.js'
-import { globalErrorHandling } from "./utils/asyncHandler.js"
+import { connectDB } from "../db/connection.js";
+import * as allRouters from './index.js';
+import { globalErrorHandling } from "./utils/asyncHandler.js";
 import { webhook } from "./utils/webhook.js";
 
 export const initApp = (app, express) => {

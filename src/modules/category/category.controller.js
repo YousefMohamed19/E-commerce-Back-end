@@ -1,7 +1,7 @@
 import slugify from "slugify"
 import { Category, Product, SubCategory } from "../../../db/index.js"
-import { AppError ,messages, deleteFile,ApiFeature} from "../../utils/index.js"
 import cloudinary from "../../utils/cloudinary.js"
+import { ApiFeature, AppError, deleteFile, messages } from "../../utils/index.js"
 
 
 // add category

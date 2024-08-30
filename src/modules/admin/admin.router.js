@@ -1,10 +1,10 @@
 import { Router } from "express";
+import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
+import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
 import { asyncHandler, cloudUpload, roles } from "../../utils/index.js";
 import { addAdmin, addUser, deleteUser, getUsers, updateUser } from "./admin.controller.js";
-import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-import { isValid } from "../../middleware/validation.js";
 import { addAdminVal, addUserVal, deleteUserVal, updateUserVal } from "./admin.validation.js";
-import { isActive } from "../../middleware/isActive.js";
 
 const adminRouter = Router();
 // add user 

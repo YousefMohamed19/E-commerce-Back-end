@@ -1,11 +1,12 @@
 // import module
 import { Router } from "express";
-import { asyncHandler, fileUpload, roles } from "../../utils/index.js";
-import { isValid } from "../../middleware/validation.js";
-import { createBrandVal, deleteBrandVal, getSpecificBrandVal, updateBrandVal } from "./brand.validation.js";
-import { createBrand, deleteBrand, getAllBrands, getBrand, updateBrand } from "./brand.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, fileUpload, roles } from "../../utils/index.js";
+import { createBrand, deleteBrand, getAllBrands, getBrand, updateBrand } from "./brand.controller.js";
+import { createBrandVal, deleteBrandVal, getSpecificBrandVal, updateBrandVal } from "./brand.validation.js";
+
 const brandRouter = Router();
 
 // create brand  

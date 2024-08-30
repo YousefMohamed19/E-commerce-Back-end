@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { isValid } from "../../middleware/validation.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-import { asyncHandler,roles } from "../../utils/index.js";
-import { createCouponVal, deleteCouponVal, updateCouponVal } from "./coupon.validation.js";
-import { createCoupon ,getCoupons, updateCoupon, deleteCoupon} from "./coupon.controller.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, roles } from "../../utils/index.js";
+import { createCoupon, deleteCoupon, getCoupons, updateCoupon } from "./coupon.controller.js";
+import { createCouponVal, deleteCouponVal, updateCouponVal } from "./coupon.validation.js";
+
 const couponRouter = Router()
 // create coupon
 couponRouter.post('/add-coupon',

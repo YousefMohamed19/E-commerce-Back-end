@@ -1,6 +1,6 @@
 // schedulers.js
 import schedule from 'node-schedule';
-import { Cart, Coupon, User } from '../../db/index.js';
+import { Coupon, User } from '../../db/index.js';
 import { status } from './constant/enums.js';
 
 // Job to delete users with PENDING status older than 30 days

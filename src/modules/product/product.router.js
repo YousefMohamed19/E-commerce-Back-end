@@ -1,11 +1,11 @@
 // import module
 import { Router } from "express";
-import { createProductVal, getProductVal, updateProductVal } from "./product.validation.js";
-import { fileUpload , asyncHandler, roles} from "../../utils/index.js";
-import { isValid } from "../../middleware/validation.js";
-import { createProduct, updateProduct,getAllProducts, deleteProduct, getProduct } from "./product.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, fileUpload, roles } from "../../utils/index.js";
+import { createProduct, deleteProduct, getAllProducts, getProduct, updateProduct } from "./product.controller.js";
+import { createProductVal, getProductVal, updateProductVal } from "./product.validation.js";
 
 const productRouter = Router();
 

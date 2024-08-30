@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { Cart, Order, Product } from "../../db/index.js";
+import { Cart, Order } from "../../db/index.js";
 import { asyncHandler } from "./asyncHandler.js";
 
 export const webhook = asyncHandler(

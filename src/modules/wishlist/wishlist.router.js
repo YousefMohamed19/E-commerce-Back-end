@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { asyncHandler, roles } from "../../utils/index.js";
-import { addToWishlist, deleteFromWishlist, getWishlist } from "./wishlist.controller.js";
-import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-import { isValid } from "../../middleware/validation.js";
-import { addToWishlistVal } from "./wishlist.validation.js";
+import { isAuthenticate } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler } from "../../utils/index.js";
+import { addToWishlist, deleteFromWishlist, getWishlist } from "./wishlist.controller.js";
+import { addToWishlistVal } from "./wishlist.validation.js";
+
 const wishlistRouter = Router();
 
 // add to wishlist

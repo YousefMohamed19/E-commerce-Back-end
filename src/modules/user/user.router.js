@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { isValid } from "../../middleware/validation.js";
-import { getUser, resetPassword, updateUser ,deleteUser, logout} from "./user.controller.js";
-import { resetPasswordVal, updateUserVal } from "./user.validation.js";
 import { isAuthenticate } from "../../middleware/authentication.js";
-import { asyncHandler, cloudUpload } from "../../utils/index.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, cloudUpload } from "../../utils/index.js";
+import { deleteUser, getUser, logout, resetPassword, updateUser } from "./user.controller.js";
+import { resetPasswordVal, updateUserVal } from "./user.validation.js";
 
 const userRouter = Router();
 

@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { fileUpload ,asyncHandler, roles} from "../../utils/index.js";
-import { isValid } from "../../middleware/validation.js";
-import { createSubcategoryVal, deleteSubcategoryVal, getSubcategoryVal ,updateSubcategoryVal} from "./subcategory.validation.js";
-import { createSubcategory, deleteSubcategory, getSpecificSubcategories, getSubcategories, updateSubcategory } from "./subcategory.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, fileUpload, roles } from "../../utils/index.js";
+import { createSubcategory, deleteSubcategory, getSpecificSubcategories, getSubcategories, updateSubcategory } from "./subcategory.controller.js";
+import { createSubcategoryVal, deleteSubcategoryVal, getSubcategoryVal, updateSubcategoryVal } from "./subcategory.validation.js";
+
 const subcategoryRouter = Router(/*{mergeParams: true}*/);
 
 

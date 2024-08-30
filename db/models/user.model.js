@@ -1,7 +1,8 @@
-import path from 'path'
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import { model, Schema } from "mongoose";
-import {  roles, status } from '../../src/utils/index.js';
+import path from 'path';
+import { roles, status } from '../../src/utils/index.js';
+
 dotenv.config({ path: path.resolve('./config/.env') })
 // schema
 const userSchema = new Schema(

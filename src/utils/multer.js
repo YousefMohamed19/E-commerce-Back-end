@@ -1,9 +1,10 @@
 //import modules
 import fs from 'fs'
-import path from 'path'
-import { nanoid } from 'nanoid'
 import multer, { diskStorage } from "multer"
+import { nanoid } from 'nanoid'
+import path from 'path'
 import { AppError } from './appError.js'
+
 const fileValidation ={
     image:["image/jpeg","image/png","image/jpg"],
     file:["application/pdf","application/msword"],

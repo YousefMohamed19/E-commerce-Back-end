@@ -1,6 +1,6 @@
 import slugify from "slugify";
-import { Brand, Category ,Product,SubCategory} from "../../../db/index.js";
-import { AppError, messages,ApiFeature,deleteFile } from "../../utils/index.js";
+import { Brand, Category, Product, SubCategory } from "../../../db/index.js";
+import { ApiFeature, AppError, deleteFile, messages } from "../../utils/index.js";
 
 // create product
 

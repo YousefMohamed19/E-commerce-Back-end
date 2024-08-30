@@ -1,5 +1,5 @@
-import { Brand, Product } from "../../../db/index.js"
-import { AppError, deleteFile, messages,ApiFeature } from "../../utils/index.js"
+import { Brand, Product } from "../../../db/index.js";
+import { ApiFeature, AppError, deleteFile, messages } from "../../utils/index.js";
 
 // create brand
 export const createBrand = async (req, res, next) => {

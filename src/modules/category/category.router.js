@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { fileUpload ,asyncHandler,cloudUpload, roles} from "../../utils/index.js";
-import { isValid } from "../../middleware/validation.js";
-import { addCategoryVal, getCategoryVal, updateCategoryVal,deleteCategoryVal, deleteCategoryCloudVal } from "./category.validation.js";
-import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory, updateCategoryCloud } from "./category.controller.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, cloudUpload, fileUpload, roles } from "../../utils/index.js";
+import { addCategory, CreateCategoryCloud, deletCategory, deleteCategoryCloud, getAllCategory, getSpecificCategory, updateCategory, updateCategoryCloud } from "./category.controller.js";
+import { addCategoryVal, deleteCategoryCloudVal, deleteCategoryVal, getCategoryVal, updateCategoryVal } from "./category.validation.js";
+
 const categoryRouter = Router()
 // for merge params
 // categoryRouter.use('/:categoryId', subcategoryRouter)

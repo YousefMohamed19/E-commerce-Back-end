@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { asyncHandler, roles } from "../../utils/index.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/authentication.js";
-import { addReviewVal, getReviewsVal,deleteReviewVal } from "./review.validation.js";
-import { addReview, getReviews ,deleteReview} from "./review.controller.js";
-import { isValid } from "../../middleware/validation.js";
 import { isActive } from "../../middleware/isActive.js";
+import { isValid } from "../../middleware/validation.js";
+import { asyncHandler, roles } from "../../utils/index.js";
+import { addReview, deleteReview, getReviews } from "./review.controller.js";
+import { addReviewVal, deleteReviewVal, getReviewsVal } from "./review.validation.js";
 
 const reviewRouter = Router();
 // add & update review

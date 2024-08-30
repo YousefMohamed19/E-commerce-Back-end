@@ -1,6 +1,6 @@
 // import module
-import joi from 'joi'
-import { generalFields } from '../../middleware/validation.js'
+import joi from 'joi';
+import { generalFields } from '../../middleware/validation.js';
 const parseArr = (value, helper) => {
     // Check if the value is already an object/array
     if (typeof value === 'string') {

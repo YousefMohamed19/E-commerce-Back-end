@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { isValid } from "../../middleware/validation.js";
 import { asyncHandler } from "../../utils/index.js";
-import { signUp, verifyAccount ,login,forgetPassword,changPassword} from "./auth.controller.js";
-import { signUpVal ,signInVal, forgetPasswordVal, changPasswordVal} from "./auth.validation.js";
+import { changPassword, forgetPassword, login, signUp, verifyAccount } from "./auth.controller.js";
+import { changPasswordVal, forgetPasswordVal, signInVal, signUpVal } from "./auth.validation.js";
 
 const authRouter = Router();
 

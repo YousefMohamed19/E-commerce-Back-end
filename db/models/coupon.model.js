@@ -21,12 +21,6 @@ const couponSchema = new Schema({
     },
     fromDate: { type: String, default: Date.now() },
     toDate: { type: String, default: Date.now() + (24 * 60 * 60 * 1000) },
-    assignedUsers: [
-        {
-            user: { type: Schema.Types.ObjectId, ref: "User" },
-            maxUse: { type: Number, default: 10, max: 10 }
-        }
-    ],
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true })
 // model

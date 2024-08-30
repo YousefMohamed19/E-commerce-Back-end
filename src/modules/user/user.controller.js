@@ -1,6 +1,7 @@
 import { Cart, User } from "../../../db/index.js"
 import cloudinary from "../../utils/cloudinary.js"
-import { comparePassword, hashPassword,AppError,messages, deleteFile, status, generateToken, sendEmail } from "../../utils/index.js"
+import { AppError, comparePassword, generateToken, hashPassword, messages, sendEmail, status } from "../../utils/index.js"
+
 // reset password
 export const resetPassword = async (req, res, next) => {
     // get data from req

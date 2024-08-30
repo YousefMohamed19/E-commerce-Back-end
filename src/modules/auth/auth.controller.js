@@ -1,5 +1,5 @@
 import { Cart, User } from "../../../db/index.js"
-import { AppError, messages , sendEmail, generateToken, verifyToken, status, comparePassword, hashPassword, generateOTP} from "../../utils/index.js"
+import { AppError, comparePassword, generateOTP, generateToken, hashPassword, messages, sendEmail, status, verifyToken } from "../../utils/index.js"
 
 export const signUp = async(req, res, next) => {
     // get data from req
