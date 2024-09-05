@@ -1,5 +1,5 @@
 import { Product, Review } from "../../../db/index.js"
-import { ApiFeature, AppError, messages } from "../../utils/index.js"
+import { ApiFeature, AppError, messages, roles } from "../../utils/index.js"
 // add  & update review
 export const addReview = async (req, res,next) => {
     // get data from req
@@ -70,7 +70,7 @@ export const deleteReview = async (req, res, next) => {
         return next(new AppError(messages.review.notFound, 404))
     }
     // check user
-    if (reviewExist.user.toString() !== req.authUser._id.toString()) {
+    if (reviewExist.user.toString() !== req.authUser._id.toString() && req.authUser.role == roles.CUSTOMER) {
         return next(new AppError(messages.review.notAuthorized, 400))
     }
     // delete review
